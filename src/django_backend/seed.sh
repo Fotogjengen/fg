@@ -12,7 +12,8 @@ bash ./remove-migrations.sh
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py loaddata auth_dump.json
-cp ./fg/api/seed_migration.py ./fg/api/migrations/dev_seed.py
+mkdir -p ./fg/fg_auth/migrations
+mkdir -p ./fg/api/migrations && cp ./fg/api/seed_migration.py ./fg/api/migrations/dev_seed.py
 ./manage.py makemigrations --merge --no-input
 ./manage.py migrate
 
