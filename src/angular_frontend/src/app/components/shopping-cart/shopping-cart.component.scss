@@ -1,0 +1,66 @@
+@import '../../../styles/_mixins.scss';
+@import '../../../styles/_colors.scss';
+
+
+.shopping-card {
+  &--image {
+    height: inherit;
+    max-height: 12rem;    
+  }
+}
+
+.alert {
+  position: fixed;
+  &--text {
+    font-size: 1.5rem;
+    margin: 1rem;
+
+    @include linx($warning);
+  }
+}
+
+.wrapper {
+  padding-top: 3em;
+}
+
+
+.shopping-table {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: smaller;
+  border-bottom: 2px solid $outline;
+
+  &--head {
+    &--row > td + td {
+      border-left: 2px solid $outline;
+    }
+  }
+
+  &--body {
+    background-color: transparent;
+  }
+
+  &--img {
+    object-fit: contain;
+    width: 100px;
+  }
+}
+
+.card {
+  padding: 10px 0;
+
+  &--container {
+    padding: 10px;
+    width: 100%;
+    border: 10px solid $outline;
+    border-radius: 3px;
+  }
+
+  &--img {
+    object-fit: contain;
+
+    & > img {
+      width: 200px;
+    }
+  }
+}
+

@@ -1,0 +1,13 @@
+<div class="col center-xs">
+  <fg-photo-masonry class="p-t-1" *ngIf="store.photos$ | async" [photos]="(store.photos$ | async)?.results">
+  </fg-photo-masonry>
+  <div class="p-t-1">
+    <button class="big-button" (click)="getMoreHomePagePhotos()">Mer</button>
+  </div>
+</div>
+
+<!-- <span *ngFor="let photoResult of root.results" class="image fit">
+  <img  src="{{photoResult.photo.medium}}"
+        srcset="{{photoResult.photo.small}} 400w, {{photoResult.photo.medium}} 900w, {{photoResult.photo.large}} 1200w"
+        alt="{{photoResult.motive}}"/>
+</span> -->

@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/media": {
+    "target": "http://localhost:80",
+    "secure": false
+  },
+  "/django-static": {
+    "target": "http://localhost:80",
+    "secure": false
+  }
+}
