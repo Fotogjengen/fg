@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IForeignKey, IResponse, IPhoto, IFilters} from 'app/model';
-import { DATE_OPTIONS } from 'app/config';
-import { ApiService, StoreService } from 'app/services';
-import { Router, ActivatedRoute } from '@angular/router';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {IForeignKey, IResponse, IPhoto, IFilters} from 'app/model';
+import {DATE_OPTIONS} from 'app/config';
+import {ApiService, StoreService} from 'app/services';
+import {Router, ActivatedRoute} from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -22,6 +22,13 @@ export class SearchComponent implements OnInit {
   places: IForeignKey[];
   securityLevels: IForeignKey[];
 
+
+  /*
+  * We will send this to store when we press edit or multi edit
+  * and use it when we are done editing to automatically search with the same
+  * params when we get back
+  */
+  lastSearchString: string;
   motives: string[];
   filteredMotives: string[] = [];
   searching = false;
@@ -30,9 +37,9 @@ export class SearchComponent implements OnInit {
   oldParams = {};
 
   truthies = [
-    { name: '-- Alle --', value: null },
-    { name: 'Sant', value: true },
-    { name: 'Usant', value: false }
+    {name: '-- Alle --', value: null},
+    {name: 'Sant', value: true},
+    {name: 'Usant', value: false}
   ];
 
   constructor(
@@ -42,11 +49,11 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    api.getAlbums().subscribe(x => this.albums = [{ id: null, name: '-- Alle --' }, ...x]);
-    api.getCategories().subscribe(x => this.categories = [{ id: null, name: '-- Alle --' }, ...x]);
-    api.getMediums().subscribe(x => this.mediums = [{ id: null, name: '-- Alle --' }, ...x]);
-    api.getPlaces().subscribe(x => this.places = [{ id: null, name: '-- Alle --' }, ...x]);
-    api.getSecurityLevels().subscribe(x => this.securityLevels = [{ id: null, name: '-- Alle --' }, ...x]);
+    api.getAlbums().subscribe(x => this.albums = [{id: null, name: '-- Alle --'}, ...x]);
+    api.getCategories().subscribe(x => this.categories = [{id: null, name: '-- Alle --'}, ...x]);
+    api.getMediums().subscribe(x => this.mediums = [{id: null, name: '-- Alle --'}, ...x]);
+    api.getPlaces().subscribe(x => this.places = [{id: null, name: '-- Alle --'}, ...x]);
+    api.getSecurityLevels().subscribe(x => this.securityLevels = [{id: null, name: '-- Alle --'}, ...x]);
     api.getAllMotives().subscribe(x => {
       this.motives = x['motives'];
       this.filteredMotives = x['motives'];
@@ -73,19 +80,27 @@ export class SearchComponent implements OnInit {
     this.searchForm.get('motive').valueChanges.subscribe(m => {
       this.filteredMotives = this.motives.filter(motive => motive.toLowerCase().indexOf(m) !== -1);
     });
+    // If we are routed back from "edit" then we will automatically search for the same as we had before we edited
+    if (this.store.lastSearchedString.length > 0) {
+      this.initialize(JSON.parse(this.store.lastSearchedString));
+      this.store.lastSearchedString = '';
+    }
   }
 
   initialize(filter: any) {
     this.searchForm = this.fb.group({
       motive: [filter.motive, []],
       tags: [filter.tags ? this.initTags(filter.tags) : [], []],
-      sort: [filter.sort, []],
       date_taken_from: [filter.date_taken_from, []],
       date_taken_to: [filter.date_taken_to, []],
       category: [filter.category, []],
       media: [filter.media, []],
       album: [filter.album, []],
-      place: [filter.place, []]
+      place: [filter.place, []],
+      security_level: [filter.security_level, []],
+      lapel: [filter.lapel, []],
+      on_home_page: [filter.on_home_page, []],
+      splash: [filter.splash, []]
     });
     this.search(filter);
   }
@@ -120,6 +135,7 @@ export class SearchComponent implements OnInit {
       this.oldParams = params; // saving old params to use later when changing page
       this.searching = false;
       this.photosAreLoaded = true;
+      this.lastSearchString = JSON.stringify(params);
     });
   }
 
@@ -143,11 +159,21 @@ export class SearchComponent implements OnInit {
     console.log('TODO');
   }
 
-  editAllMarked() {
+  async editAllMarked() {
+    this.store.lastSearchedString = this.lastSearchString;
     const ids = this.response.results.filter(p => p.checkedForEdit).map(p => p.id);
-    this.router.navigate(['../rediger'], {
+    await this.router.navigate(['../rediger'], {
       relativeTo: this.route,
-      queryParams: { id: ids }
+      queryParams: {id: ids},
+    });
+  }
+
+  async editSingle(photoID: number) {
+    this.store.lastSearchedString = this.lastSearchString;
+    console.log('hei');
+    await this.router.navigate(['../rediger'], {
+      relativeTo: this.route,
+      queryParams: {id: photoID},
     });
   }
 

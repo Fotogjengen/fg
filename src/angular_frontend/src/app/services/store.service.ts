@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Router, ParamMap } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { ApiService } from 'app/services/api.service';
+import {Injectable} from '@angular/core';
+import {Router, ParamMap} from '@angular/router';
+import {HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {ApiService} from 'app/services/api.service';
 import {
   IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage
 } from 'app/model';
-import { DELTA } from 'app/config';
+import {DELTA} from 'app/config';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
-import { ToastrService } from 'ngx-toastr';
+import {ToastrService} from 'ngx-toastr';
 import * as _ from 'lodash';
 
 interface IForeignKeyModal {
@@ -30,6 +30,12 @@ export class StoreService {
   private _photoShoppingCart$ = new BehaviorSubject<IPhoto[]>(null);
   private _searchTags$ = new BehaviorSubject<IForeignKey[]>(null);
 
+  /*
+  * To use when you get back to search after editing photos, so it will automatically search with correct params
+  * No point in having this as a behaviorsubject afaik
+  */
+  public lastSearchedString: string = '';
+
   public photoRouteActive$ = new Subject<boolean>();
   public photoModal$ = new BehaviorSubject<[IPhoto[], number]>(null);
 
@@ -40,7 +46,6 @@ export class StoreService {
   public latestPageAndImageNumber = new BehaviorSubject<ILatestImageAndPage>(null);
 
   public orders$: { [type: string]: BehaviorSubject<IOrder[]>; } = {};
-
 
 
   private returnUrl;
@@ -93,7 +98,7 @@ export class StoreService {
   }
 
   getHomePagePhotosAction(params: ParamMap) {
-    const filter: IFilters = params.get('page') ? { page: params.get('page') } : null;
+    const filter: IFilters = params.get('page') ? {page: params.get('page')} : null;
     this.api.getHomePagePhotos(filter).subscribe(
       pr => this._photos$.next(pr),
       err => this.toastr.error('Feil', JSON.parse(err.error).detail)
@@ -103,7 +108,7 @@ export class StoreService {
 
   getMoreHomePagePhotosAction() {
     if (this._photos$.getValue() && this._photos$.getValue().next) {
-      const filters = { page: this.getQueryParamValue(this._photos$.getValue().next, 'page') };
+      const filters = {page: this.getQueryParamValue(this._photos$.getValue().next, 'page')};
       this.setFiltersAction(filters);
       const currentPhotoList = this._photos$.getValue().results;
       this.api.getPhotos(filters).subscribe(pr => {
@@ -144,7 +149,7 @@ export class StoreService {
   }
 
   showLoginModalAction(returnUrl?) {
-    this._loginModal$.next({ username: '', password: '' });
+    this._loginModal$.next({username: '', password: ''});
     this.returnUrl = returnUrl;
   }
 
@@ -153,15 +158,17 @@ export class StoreService {
   }
 
   showForeignKeyModalAction(fk: IForeignKey, type: string) {
-    this._foreignKeyModal$.next({ fk, type });
+    this._foreignKeyModal$.next({fk, type});
   }
 
   updateFgUserAction(user: IUser) {
     return this.api.updateUser(user).subscribe(() => this.getFgUsersAction());
   }
+
   createFgUserAction(user: IUser) {
     return this.api.createUser(user).subscribe(() => this.getFgUsersAction());
   }
+
   deleteFgUserAction(user: IUser) {
     return this.api.deleteUser(user).subscribe(() => this.getFgUsersAction());
   }
@@ -169,9 +176,11 @@ export class StoreService {
   updatePowerUserAction(user: IUser) {
     return this.api.updateUser(user).subscribe(() => this.getPowerUsersAction());
   }
+
   createPowerUserAction(user: IUser) {
     return this.api.createUser(user).subscribe(() => this.getPowerUsersAction());
   }
+
   deletePowerUserAction(user: IUser) {
     return this.api.deleteUser(user).subscribe(() => this.getPowerUsersAction());
   }
@@ -204,7 +213,7 @@ export class StoreService {
       this._loginModal$.next(null);
       this.toastr.success(`Velkommen ${res.username} 😊`);
     }, err => {
-      this._loginModal$.next({ username: null, password: null, hasFailed: true });
+      this._loginModal$.next({username: null, password: null, hasFailed: true});
     });
   }
 
@@ -284,6 +293,7 @@ export class StoreService {
   get filters$() {
     return this._filters$.asObservable();
   }
+
   get photos$() {
     return this._photos$.asObservable();
   }
