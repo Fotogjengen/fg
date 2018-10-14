@@ -38,7 +38,7 @@
     "imagesloaded": "^4.1.4",
     "jwt-decode": "^2.2.0",
     "masonry-layout": "^4.2.1",
-    "moment": "^2.20.1",
+    "moment": "^2.22.2",
     "ng-animate": "^0.3.4",
     "ng-click-outside": "^2.4.1",
     "ngx-mydatepicker": "^2.4.0",

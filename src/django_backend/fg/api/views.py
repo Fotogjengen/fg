@@ -169,6 +169,7 @@ class PhotoViewSet(ModelViewSet):
             return models.Photo.objects.filter(security_level__name="ALLE")
 
 
+@api_view(['GET'])
 def get_latest_image_number_and_page_number(request, album_id='', analog=False):
     try:
         if album_id:
@@ -208,6 +209,14 @@ def get_latest_image_number_and_page_number(request, album_id='', analog=False):
             'latest:page': 1,
             'latest_image_number': 1
         })
+
+
+@api_view(['GET'])
+def get_date_of_last_photo_taken(request):
+    latest_data = models.Photo.objects.latest().date_taken
+    return Response({
+        'latest_date': latest_data
+    })
 
 
 class LatestSplashPhotoView(RetrieveAPIView):

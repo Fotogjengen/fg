@@ -31,7 +31,8 @@ import {
   AnalogUploadComponent,
   RegisterFilmComponent,
   OrdersComponent,
-  UploadScannedComponent
+  UploadScannedComponent,
+  AlbumsComponent,
 } from 'app/components';
 
 import { AuthGuardService } from 'app/services';
@@ -53,6 +54,10 @@ const routes: Routes = [
   {
     path: 'kontakt',
     component: KontaktComponent
+  },
+  {
+    path: 'albums',
+    component: AlbumsComponent
   },
   {
     path: 'intern',

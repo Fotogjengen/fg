@@ -46,3 +46,4 @@ export * from './login/login.component';
 export * from './shopping-cart/shopping-cart.component';
 export * from './apply-fg/apply-fg.component';
 export * from './book-fg/book-fg.component';
+export * from './albums/albums.component';

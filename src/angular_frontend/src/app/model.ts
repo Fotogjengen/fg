@@ -176,6 +176,10 @@ export interface ILatestImageAndPage {
   latest_image_number: number;
 }
 
+export interface IDateTakenLatestPhoto {
+  latest_date: string;
+}
+
 export interface IOrderPhoto {
   /* photo: IPhoto; */
   photo: number;
