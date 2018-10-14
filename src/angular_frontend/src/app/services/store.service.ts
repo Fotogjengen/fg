@@ -31,7 +31,7 @@ export class StoreService {
   private _searchTags$ = new BehaviorSubject<IForeignKey[]>(null);
 
   public photoRouteActive$ = new Subject<boolean>();
-  public photoModal$ = new BehaviorSubject<IPhoto>(null);
+  public photoModal$ = new BehaviorSubject<[IPhoto[], number]>(null);
 
   public foreignKeys$: { [type: string]: BehaviorSubject<IForeignKey[]>; } = {};
   public fgUsers$ = new BehaviorSubject<IUser[]>(null);

@@ -96,7 +96,7 @@
                   <tr [formGroupName]="i" *ngFor="let photo of (store.photoShoppingCart$ | async); let i = index" class="shopping-table--body--row">
                     <!-- IMAGE | BEGIN -->
                     <td fxLayoutAlign="center center">
-                      <img class="shopping-table--img clickable hover-outline" [src]="photo?.photo?.small" (click)="onPhotoClick(photo)">
+                      <img class="shopping-table--img clickable hover-outline" [src]="photo?.photo?.small" (click)="onPhotoClick(i)">
                     </td>
                     <!-- IMAGE | END -->
 

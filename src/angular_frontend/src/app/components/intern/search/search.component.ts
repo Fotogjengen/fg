@@ -155,8 +155,8 @@ export class SearchComponent implements OnInit {
     photo.checkedForEdit = checked;
   }
 
-  onPhotoClick(photo: IPhoto) {
-    this.store.photoModal$.next(photo);
+  onPhotoClick(i: number) {
+    this.store.photoModal$.next([this.response.results, i]);
   }
 
   newParams(params: string) {

@@ -35,6 +35,6 @@ export class BannerComponent {
   }
 
   onPhotoClick(photo: IPhoto) {
-      this.store.photoModal$.next(photo);
+      this.store.photoModal$.next([[photo], 0]);
   }
 }
