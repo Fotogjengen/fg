@@ -2,18 +2,20 @@
 <section class="wrapper" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="15px">
   <div class="search" class="p-t-1" fxFlexFill fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center">
     <div fxLayout="column" fxFlex="60%" fxLayoutGap="20px" fxLayoutAlign="center">
-      <!-- [(ngModel)]="searchInput" -->
-      <!-- simple search-->
-      <input [disabled]="isAdvanced" [matAutocomplete]="inputOption" #photoSearchBox class="photo-search-input"
-             id="photo-search-input" type="text" (keyup.enter)="search(photoSearchBox.value)"
+      <input
+      [disabled]="isAdvanced"
+      #photoSearchBox
+      class="photo-search-input"
+      id="photo-search-input" type="text"
+      [(ngModel)]="searchInput"
+      (keyup.enter)="search(photoSearchBox.value)"
       />
-      <!-- Advanced search form -->
-      <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" *ngIf="isAdvanced" fxFlex="90%"
-            fxLayout="column" fxLayoutGap="10px">
+
+      <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" *ngIf="isAdvanced" [@slideDown]="isAdvanced" fxFlex="90%" fxLayout="column" fxLayoutGap="10px">
         <div fxLayout="row" fxLayoutGap="15px">
           <div class="search-input-group" fxLayout="column" fxFlex="<grow>">
             <label>Tittel</label>
-            <input matInput [matAutocomplete]="motive" type="text" formControlName="motive">
+            <input type="text" formControlName="motive">
           </div>
           <div class="search-input-group" fxLayout="column">
             <label>Sortering</label>
@@ -26,26 +28,26 @@
           <div class="search-input-group" fxLayout="column" fxFlex="<grow>">
             <label>Tagger</label>
             <!-- <input type="text" formControlName="tags"> -->
-            <fg-chips formControlName="tags" [search]="true"></fg-chips>
+            <fg-chips formControlName="tags"></fg-chips>
           </div>
         </div>
         <div fxLayout="row" fxLayoutGap="15px">
           <div class="search-input-group" fxLayout="column" fxFlex="<grow>">
             <label>Media</label>
             <select formControlName="media">
-              <option [ngValue]="media.id" *ngFor="let media of mediums">{{media.name}}</option>
+            <option [ngValue]="media.id" *ngFor="let media of mediums">{{media.name}}</option>
             </select>
           </div>
           <div class="search-input-group" fxLayout="column" fxFlex="<grow>">
             <label>Kategori</label>
             <select formControlName="category">
-              <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
+            <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
             </select>
           </div>
           <div class="search-input-group" fxLayout="column" fxFlex="<grow>">
             <label>Sted</label>
             <select formControlName="place">
-              <option [ngValue]="place.id" *ngFor="let place of places">{{place.name}}</option>
+            <option [ngValue]="place.id" *ngFor="let place of places">{{place.name}}</option>
             </select>
           </div>
         </div>
@@ -58,22 +60,6 @@
 </section>
 <div fxFlexFill fxLayout="column" fxLayoutAlign="center">
   <hr>
-  <h4 class="p-l-2" *ngIf="!photos?.length && !loading">Ingen treff</h4>
-  <fg-photo-masonry *ngIf="!loading" [photos]="photos"></fg-photo-masonry>
-  <div *ngIf="this.response">
-    <fg-paginator (newParams)="newParams($event)" [response]="this.response"></fg-paginator>
-  </div>
+  <h4 class="p-l-2" *ngIf="!photos?.length && searching">Ingen treff</h4>
+  <fg-photo-masonry [photos]="photos"></fg-photo-masonry>
 </div>
-
-<mat-autocomplete #motive="matAutocomplete">
-  <mat-option *ngFor="let motive of filteredMotives" [value]="motive">
-    {{ motive }}
-  </mat-option>
-</mat-autocomplete>
-
-<!-- Add to non advanced search box -->
-<mat-autocomplete #inputOption="matAutocomplete">
-  <mat-option *ngFor="let inputOption of filteredMotives" [value]="inputOption">
-    {{ inputOption }}
-  </mat-option>
-</mat-autocomplete>

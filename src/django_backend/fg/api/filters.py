@@ -1,10 +1,10 @@
-from django_filters.rest_framework import FilterSet, filters
+import rest_framework_filters as drf_filters
 from . import models
 
 
-class PhotoFilter(FilterSet):
-    date_taken_from = filters.DateFilter(field_name='date_taken', lookup_expr='gte')
-    date_taken_to = filters.DateFilter(field_name='date_taken', lookup_expr='lte')
+class PhotoFilter(drf_filters.FilterSet):
+    date_taken_from = drf_filters.DateFilter(name='date_taken', lookup_expr='gte')
+    date_taken_to = drf_filters.DateFilter(name='date_taken', lookup_expr='lte')
 
     class Meta:
         model = models.Photo
@@ -25,8 +25,7 @@ class PhotoFilter(FilterSet):
         ]
 
 
-
-class OrderFilter(FilterSet):
+class OrderFilter(drf_filters.FilterSet):
     class Meta:
         model = models.Order
         fields = [

@@ -1,30 +1,28 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule, LOCALE_ID} from '@angular/core';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import {ngfModule} from 'angular-file';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {NgxMyDatePickerModule} from 'ngx-mydatepicker';
-import {ClickOutsideModule} from 'ng-click-outside';
-import {NgProgressModule} from '@ngx-progressbar/core';
-import {NgProgressHttpClientModule} from '@ngx-progressbar/http-client';
-import {registerLocaleData} from '@angular/common';
-import {MatTooltipModule, MatAutocompleteModule} from '@angular/material';
-import {ToastrModule} from 'ngx-toastr';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ngfModule } from 'angular-file';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
+import { ClickOutsideModule } from 'ng-click-outside';
+import { NgProgressModule } from '@ngx-progressbar/core';
+import { NgProgressHttpClientModule } from '@ngx-progressbar/http-client';
+import { registerLocaleData } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
 import localeNb from '@angular/common/locales/nb';
-
 registerLocaleData(localeNb);
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
-import {ApiService} from './services/api.service';
-import {StoreService} from './services/store.service';
-import {AuthGuardService} from './services/auth-guard.service';
-import {OutAuthInterceptor} from './services/interceptor.service';
-import {MegabytePipe} from 'app/pipes/pipes.pipe';
-import {MasonryLayoutDirective, ImagePreviewDirective} from 'app/directives';
+import { ApiService } from './services/api.service';
+import { StoreService } from './services/store.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { OutAuthInterceptor } from './services/interceptor.service';
+import { MegabytePipe } from 'app/pipes/pipes.pipe';
+import { MasonryLayoutDirective, ImagePreviewDirective } from 'app/directives';
 import {
   NavComponent,
   GalleryComponent,
@@ -43,7 +41,6 @@ import {
   PhotosComponent,
   PhotoMasonryComponent,
   PhotoModalComponent,
-  PhotoInfoModalComponent,
   NotFoundComponent,
   SearchComponent,
   EditComponent,
@@ -67,16 +64,14 @@ import {
   OldOrdersComponent,
   AnalogUploadComponent,
   RegisterFilmComponent,
-  UploadScannedComponent,
-  MetadataModalComponent
+  UploadScannedComponent
 } from 'app/components';
 
 import {
   ChipsComponent,
   ChipComponent,
   RadioButtonsComponent,
-  BarchartComponent,
-  PaginatorComponent
+  BarchartComponent
 } from 'app/utils';
 
 @NgModule({
@@ -105,7 +100,6 @@ import {
     PhotosComponent,
     PhotoMasonryComponent,
     PhotoModalComponent,
-    PhotoInfoModalComponent,
     NotFoundComponent,
     SearchComponent,
     EditComponent,
@@ -133,10 +127,7 @@ import {
     BarchartComponent,
     AnalogUploadComponent,
     RegisterFilmComponent,
-    UploadScannedComponent,
-    MetadataModalComponent,
-    PaginatorComponent,
-    PhotoInfoModalComponent
+    UploadScannedComponent
   ],
   imports: [
     BrowserModule,
@@ -148,15 +139,10 @@ import {
     ngfModule,
     FlexLayoutModule,
     ClickOutsideModule,
-    MatTooltipModule,
-    MatAutocompleteModule,
-    ToastrModule.forRoot({
-      progressBar: true,
-      positionClass: 'toast-top-center' // Put this in center so it isn't in the way of anything
-    }),
+    ToastrModule.forRoot({ progressBar: true }),
     NgxMyDatePickerModule.forRoot(),
     NgProgressModule.forRoot(),
-    NgProgressHttpClientModule
+    NgProgressHttpClientModule,
   ],
   providers: [
     {
@@ -174,5 +160,4 @@ import {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule { }

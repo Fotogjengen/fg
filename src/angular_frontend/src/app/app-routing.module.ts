@@ -165,7 +165,6 @@ const routes: Routes = [
   },
   {
     path: 'handlekurv',
-    canActivate: [AuthGuardService],
     component: ShoppingCartComponent
   },
   { // 404 If not recognized

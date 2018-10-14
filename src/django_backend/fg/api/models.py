@@ -1,14 +1,10 @@
 import os
-import logging
 from .. import settings
 from django.db import models
-from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 from versatileimagefield.fields import VersatileImageField, PPOIField
 
-class Tag(models.Model):
-    objects = models.Manager()
 
+class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True, db_index=True)
 
     def __str__(self):
@@ -16,8 +12,6 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=80, unique=True, db_index=True)
 
     class Meta:
@@ -28,8 +22,6 @@ class Category(models.Model):
 
 
 class Media(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=80, unique=True, db_index=True)
 
     def __str__(self):
@@ -37,20 +29,15 @@ class Media(models.Model):
 
 
 class Album(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=5, unique=True, db_index=True)
-    date_created = models.DateTimeField(blank=True, default=timezone.now)
+    date_created = models.DateTimeField(blank=True, auto_now_add=True)
     description = models.CharField(max_length=32)
-    type = models.PositiveSmallIntegerField(null=True)
 
     def __str__(self):
         return self.name
 
 
 class Place(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=80, unique=True, db_index=True)
 
     def __str__(self):
@@ -58,8 +45,6 @@ class Place(models.Model):
 
 
 class SecurityLevel(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=16, unique=True, db_index=True)
 
     def __str__(self):
@@ -76,8 +61,6 @@ def path_and_rename(instance, filename):
 
 
 class Photo(models.Model):
-    objects = models.Manager()
-
     # The actual photo object
     photo = VersatileImageField(
         upload_to=path_and_rename,
@@ -86,36 +69,35 @@ class Photo(models.Model):
     )
 
     # Information describing the photo
-    motive = models.CharField(max_length=256, db_index=True, blank=True, verbose_name='motives')
-    description = models.CharField(max_length=2048, blank=True, null=True, verbose_name='descriptions')
-    date_taken = models.DateTimeField()
+    # height = models.IntegerField()
+    # width = models.IntegerField()
+    motive = models.CharField(max_length=256, db_index=True, blank=True, verbose_name='motiv')
+    date_taken = models.DateTimeField()  # TODO removed auto_now_add
     date_modified = models.DateTimeField(auto_now=True)
-    photo_ppoi = PPOIField()  # Point of interest dot, 2d vector
+    photo_ppoi = PPOIField()
 
     # Meta information
     page = models.IntegerField(db_index=True)
     image_number = models.PositiveIntegerField(db_index=True)
     lapel = models.BooleanField(default=False, db_index=True)
     scanned = models.BooleanField(default=False, db_index=True)
-    on_home_page = models.BooleanField(default=False, db_index=True)
+    on_home_page = models.BooleanField(default=True, db_index=True)
     splash = models.BooleanField(default=False)
 
     # Foreign keys describing meta-data
-    # models.PROTECT protects against cascading deletion. You cant delete a security level that has photos
     security_level = models.ForeignKey(SecurityLevel, on_delete=models.PROTECT)
+    # models.Protect protects against cascading deletion. You cant delete a security level that has photos
     tags = models.ManyToManyField(Tag, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    media = models.ForeignKey(Media, on_delete=models.PROTECT)
-    album = models.ForeignKey(Album, on_delete=models.PROTECT)
-    place = models.ForeignKey(Place, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category)
+    media = models.ForeignKey(Media)
+    album = models.ForeignKey(Album)
+    place = models.ForeignKey(Place)
 
     def __str__(self):
-        if self.photo.name:
-            return self.photo.name
-        return str(self.id)
+        return self.photo.name
 
     def save(self, *args, **kwargs):
-        try:
+        if self.pk is not None:
             orig = Photo.objects.get(pk=self.pk)
             if orig.album != self.album:
                 self.move_image_file_location()
@@ -125,9 +107,6 @@ class Photo(models.Model):
                 self.move_image_file_location()
             elif orig.image_number != self.image_number:
                 self.move_image_file_location()
-        except ObjectDoesNotExist as e:
-            logging.warning("move not required, photo instance does not already exist!")
-            logging.warning(e)
 
         super(Photo, self).save(*args, **kwargs)
 
@@ -173,13 +152,8 @@ class Photo(models.Model):
     class Meta:
         get_latest_by = 'date_taken'
 
-        # throws a django.db.utils.IntegrityError if you try to add a duplicate
-        unique_together = ('page', 'image_number', 'album')
-
 
 class Order(models.Model):
-    objects = models.Manager()
-
     name = models.CharField(max_length=64)
     email = models.EmailField(max_length=32)
     address = models.CharField(max_length=64)
@@ -195,11 +169,12 @@ class Order(models.Model):
 
 
 class OrderPhoto(models.Model):
-    objects = models.Manager()
-
-    photo = models.ForeignKey(Photo, on_delete=models.PROTECT)
-    order = models.ForeignKey(Order, related_name='order_photos', on_delete=models.PROTECT)
+    photo = models.ForeignKey(Photo)
+    # photo = models.IntegerField()
+    order = models.ForeignKey(Order, related_name='order_photos')
     format = models.CharField(max_length=16)
 
     def __str__(self):
         return str(self.photo) + ' - ' + self.order.email + ' - ' + self.format
+
+

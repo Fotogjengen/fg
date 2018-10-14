@@ -10,9 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
-import sys
-import datetime
+import os, sys, datetime
 
 # Time zone
 TIME_ZONE = 'Europe/Oslo'
@@ -47,33 +45,36 @@ INSTALLED_APPS = [
     'versatileimagefield',
     'rest_framework_filters',
     'django_filters',
+    'rest_framework.authtoken',
+
 
     # Own apps
     'fg.api',
-    'fg.fg_auth',
-    'fg.legacy'
+    'fg.fg_auth'
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+#        'rest_framework.authentication.BasicAuthentication',
+	
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_FILTER_BACKENDS': ('rest_framework_filters.backends.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
+    'PAGE_SIZE': 25
 }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -104,24 +105,18 @@ WSGI_APPLICATION = 'fg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'PASSWORD': 'qwer1234',
-        'USER': 'fg',
-        'HOST': 'postgres',
-        'PORT': '5432',
-    },
-    'old_db': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'old_fg',
+        'NAME': 'SQLITE',
         'PASSWORD': 'qwer1234',
         'USER': 'fg',
         'HOST': 'postgres',
         'PORT': '5432',
     }
 }
-
 if 'test' in sys.argv or 'test_coverage' in sys.argv or 'TRAVIS' in os.environ:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+
+# TODO temp sqlite
+DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -228,14 +223,11 @@ VERSATILEIMAGEFIELD_SETTINGS = {
     ]
 }
 
-# AUTH SETTINGS
+AUTHENTICATION_BACKENDS = [
+    'fg.fg_auth.backends.AdRemoteUserBackend'
+]
+
 AUTH_USER_MODEL = 'fg_auth.User'
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
-AUTHENTICATION_BACKENDS = (
-    'fg.fg_auth.auth.KerberosBackend',
-    'django.contrib.auth.backends.ModelBackend'
-)
 
 # Groups
 GROUPS = {
@@ -246,22 +238,3 @@ GROUPS = {
 
 # Security levels
 SECURITY_LEVELS = ["ALLE", "HUSFOLK", "FG"]
-
-# Logging SQL statements when debug true
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    }
-}

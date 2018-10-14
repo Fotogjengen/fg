@@ -4,8 +4,6 @@ export interface IResponse<T> {
   count: number;
   next: string;
   previous: any;
-  total_pages: number;
-  current_page: number;
   results: T[];
 }
 
@@ -41,10 +39,7 @@ export interface IPhoto {
   place: IMetaData;
   security_level: IMetaData;
   addedToCart?: boolean;
-  liked?: boolean; // Why this?
   checkedForEdit?: boolean;
-  // TODO gjør dette obligatorisk?
-  description?: string;
 }
 
 export class PartialPhoto {
@@ -74,7 +69,7 @@ export class PartialPhoto {
         if (['album', 'category', 'media', 'place', 'security_level'].indexOf(key) !== -1) {
           this[key] = photo[key].id;
         } else if (key === 'date_taken') {
-          // this[key] = photo[key]['jsdate'].toISOString();
+          this[key] = photo[key]['jsdate'].toISOString();
         } else {
           this[key] = photo[key];
         }
@@ -87,16 +82,12 @@ export class PhotoResponse implements IResponse<IPhoto> {
   count: number;
   next: string;
   previous: string;
-  total_pages: number;
-  current_page: number;
   results: IPhoto[];
 
   constructor(response: IResponse<IPhoto>) {
     this.count = response.count;
     this.next = response.next;
     this.previous = response.previous ? response.previous : undefined;
-    this.total_pages = response.total_pages;
-    this.current_page = response.current_page;
     this.results = response.results;
   }
 }
@@ -172,12 +163,6 @@ export interface IOrder {
   order_completed: boolean;
 }
 
-export interface ILatestImageAndPage {
-  album: number;
-  latest_page: number;
-  latest_image_number: number;
-}
-
 export interface IOrderPhoto {
   /* photo: IPhoto; */
   photo: number;
@@ -190,17 +175,8 @@ export interface IOrderPhoto {
 // }
 
 export interface IFilters {
+  cursor?: string;
   search?: string;
-  page?: string;
-}
-
-export interface ISearchParams {
-  motive: string;
-  tags: number[];
-  category: number;
-  media: number;
-  album: number;
-  place: number;
 }
 
 export enum ChangeEnum {
@@ -213,8 +189,6 @@ export const testData: IResponse<IPhoto> = {
   count: 1,
   next: null,
   previous: null,
-  total_pages: 1,
-  current_page: 1,
   results: [
     {
       id: 1,

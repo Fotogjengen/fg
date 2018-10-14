@@ -1,5 +1,4 @@
 @import '../../../styles/breakpoints.scss';
-@import '../../../styles/_colors.scss';
 
 .menu-closer {
   position: absolute;
@@ -20,8 +19,8 @@
   }
 }
 
-.intern {
-  background-color: $brand;
+.login {
+
 }
 
 .search-icon-button {

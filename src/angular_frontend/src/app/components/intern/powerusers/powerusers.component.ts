@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {StoreService} from 'app/services/store.service';
-import {ChangeEnum, IUser, User} from 'app/model';
-import {ApiService} from 'app/services/api.service';
+import { Component, OnInit } from '@angular/core';
+import { StoreService } from 'app/services/store.service';
+import { IUser } from 'app/model';
 
 @Component({
   selector: 'fg-powerusers',
@@ -10,15 +9,9 @@ import {ApiService} from 'app/services/api.service';
 })
 export class PowerusersComponent implements OnInit {
   users: IUser[];
-  changeType: ChangeEnum;
-  constructor(private store: StoreService) {
-  }
+  constructor(private store: StoreService) { }
 
   ngOnInit() {
     this.store.getPowerUsersAction().filter(r => !!r).subscribe(users => this.users = users);
-  }
-
-  delete(user) {
-    this.store.deletePowerUserAction(user);
   }
 }

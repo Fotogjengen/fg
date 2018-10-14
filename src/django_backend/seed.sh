@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 if [ "$DEVELOPMENT" != "true" ]; then
   echo "Either you tried to seed whilst not in the correct docker container..."
-  echo "Or you really just tried to flush and seed the database whilst in production..."
+  echo "Or you really just tried to flush and seed the database whilst in production. You humongous ape."
   exit 1
 fi
 
@@ -12,8 +12,7 @@ bash ./remove-migrations.sh
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py loaddata auth_dump.json
-mkdir -p ./fg/fg_auth/migrations
-mkdir -p ./fg/api/migrations && cp ./fg/api/seed_migration.py ./fg/api/migrations/dev_seed.py
+cp ./fg/api/seed_migration.py ./fg/api/migrations/dev_seed.py
 ./manage.py makemigrations --merge --no-input
 ./manage.py migrate
 

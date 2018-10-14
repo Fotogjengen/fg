@@ -4,31 +4,19 @@
   border: none;
   padding: 0px 3px;
   width: 100%;
-  word-break: break-word;
 }
 
-.no-style:focus {
-  box-shadow: none;
-  outline: none;
-}
+.no-style:focus{box-shadow: none; outline:none;}
+
 
 .text-input-box{
-  min-height: 2rem;
-  height: auto;
+  height: 2rem;
   background: rgba(255, 255, 255, 0.075);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 5px;
   padding: 5px;
-  //TODO: innkapsle koden under i unndertaggen &--tags
-  // håper jeg brekker noe uten innkapsling :S
-  width:auto;
-  height: auto;
-  overflow: auto;
-    //&--tags {
-  //  }
-
 }
-.text-input-box:focus {
+.text-input-box:focus{
   box-shadow: 0 0 0 1px rgba(64, 174, 255, 0.67);
-  outline: none;
+  outline:none;
 }

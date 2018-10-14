@@ -10,14 +10,10 @@ services:
     environment:
       - DEVELOPMENT=true
       - POSTGRES_DB=fg_dev_db
-    volumes:
-      - ./src/angular_frontend:/static/angular
-
 
   postgres:
     volumes:
       - ./postgres/scripts:/scripts
-      - ./postgres/data:/data
     environment:
       - DEVELOPMENT=true
       - POSTGRES_USER=fg

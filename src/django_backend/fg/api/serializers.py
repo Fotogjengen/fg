@@ -1,4 +1,3 @@
-import json
 from rest_framework import serializers
 from . import models
 from ..settings import VERSATILEIMAGEFIELD_SETTINGS
@@ -44,8 +43,7 @@ class SecurityLevelSerializer(serializers.HyperlinkedModelSerializer):
 
 class PhotoSerializer(serializers.ModelSerializer):
     photo = VersatileImageFieldSerializer(
-        sizes=VERSATILEIMAGEFIELD_SETTINGS['sizes'],
-        required=False
+        sizes=VERSATILEIMAGEFIELD_SETTINGS['sizes']
     )
 
     security_level = SecurityLevelSerializer()
@@ -54,7 +52,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     media = MediaSerializer()
     album = AlbumSerializer()
     place = PlaceSerializer()
-    description = serializers.CharField()
+
 
     class Meta:
         model = models.Photo
@@ -62,12 +60,8 @@ class PhotoSerializer(serializers.ModelSerializer):
         depth = 2
 
 
-class PhotoByIDSerializer(serializers.Serializer):
-    photo_ids = serializers.ListField(child=serializers.IntegerField(read_only=True))
-
-
 class TagListField(serializers.StringRelatedField):
-    def to_internal_value(self, value):
+    def to_internal_value ( self, value ):
         return value
 
 
@@ -77,6 +71,7 @@ class PhotoCreateSerializer(serializers.ModelSerializer):
         required=False
     )
     tags = TagListField(many=True)
+
 
     class Meta:
         model = models.Photo
@@ -98,15 +93,12 @@ class PhotoCreateSerializer(serializers.ModelSerializer):
             'lapel'
         )
 
-    def create(self, validated_data):
+
+    def create ( self, validated_data ):
         tags = validated_data.pop('tags')
+
         photo = models.Photo.objects.create(**validated_data)
-
-        tags = tags if isinstance(tags, list) else [tags] # works
-
         for tag_name in tags:
-            if not len(tag_name):
-                continue
             tag, _ = models.Tag.objects.get_or_create(name=tag_name)
             photo.tags.add(tag)
         photo.save()
@@ -120,6 +112,7 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
         required=False
     )
     tags = TagListField(many=True)
+
 
     # image_number = serializers.IntegerField(required=False)
     # page = serializers.IntegerField(required=False)
@@ -144,8 +137,8 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
             'lapel'
         )
 
-    def update(self, instance, validated_data):
-        instance.photo = validated_data.get('photo', instance.photo)
+
+    def update ( self, instance, validated_data ):
         instance.motive = validated_data.get('motive', instance.motive)
         instance.image_number = validated_data.get('image_number', instance.image_number)
         instance.page = validated_data.get('page', instance.page)
@@ -159,13 +152,9 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
         instance.on_home_page = validated_data.get('on_home_page', instance.on_home_page)
         instance.splash = validated_data.get('splash', instance.splash)
 
-        tags = validated_data.get('tags')
-        if tags:
-            # tags = json.loads(tags) Doesnt work
-            tags = tags if isinstance(tags, list) else [tags] # works
-            for tag_name in tags:
-                tag, _ = models.Tag.objects.get_or_create(name=tag_name)
-                instance.tags.add(tag)
+        for tag_name in validated_data.get('tags', instance.tags):
+            tag, _ = models.Tag.objects.get_or_create(name=tag_name)
+            instance.tags.add(tag)
 
         instance.save()
 
@@ -175,6 +164,7 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
 class OrderPhotoSerializer(serializers.ModelSerializer):
     photo_url = serializers.CharField(source='photo.photo.url', read_only=True)
 
+
     class Meta:
         model = models.OrderPhoto
         fields = ('photo', 'format', 'photo_url')
@@ -183,34 +173,51 @@ class OrderPhotoSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     order_photos = OrderPhotoSerializer(many=True)
 
+
     class Meta:
         model = models.Order
         fields = '__all__'
 
-    def create(self, validated_data):
+
+    def create ( self, validated_data ):
         order_photos = validated_data.pop('order_photos')
+        order = models.Order.objects.create(**validated_data)
 
-        if len(order_photos) < 1:
+        if len(order_photos) <= 0:
             return None  # FIXME; TODO: can still order with no photos
-        else:
-            order = models.Order.objects.create(**validated_data)
-            for op in order_photos:
-                order_photo = models.OrderPhoto.objects.create(
-                    photo=op['photo'],
-                    order=order,
-                    format=op['format']
-                )
-                order_photo.save()
+        for op in order_photos:
+            order_photo = models.OrderPhoto.objects.create(
+                photo=op['photo'],
+                order=order,
+                format=op['format']
+            )
+            order_photo.save()
 
-            order.save()
+        order.save()
 
-            return order
+        return order
 
-    def update(self, instance, validated_data):
+    def update ( self, instance, validated_data ):
         instance.order_completed = validated_data.get("order_completed")
         instance.save()
         return instance
 
+
+
+# OLD
+# class StatisticsSerializer(serializers.Serializer):
+#     photos = PhotoStatisticsSerializer(many=True)
+#     # photo_num = PhotoNumberStatisticsSerializer()
+#     tags = TagSerializer(many=True)
+#     places = PlaceSerializer(many=True)
+#     categories = CategorySerializer(many=True)
+#     mediums = MediaSerializer(many=True)
+#     orders = OrderSerializer(many=True)
+
+class PhotoStatisticsSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Photo
+        fields = ('id',)
 
 class StatisticsSerializer(serializers.Serializer):
     photos = serializers.IntegerField(read_only=True)
@@ -221,10 +228,3 @@ class StatisticsSerializer(serializers.Serializer):
     orders = serializers.IntegerField(read_only=True)
     photos_by_year = serializers.ListField(child=serializers.ListField())
     photos_per_album = serializers.ListField(child=serializers.DictField(child=serializers.CharField(read_only=True)))
-
-
-class SearchAutocompleteDataSerializer(serializers.Serializer):
-    motives = serializers.ListField(child=serializers.CharField())
-
-class PhotoMetadataSerializer(serializers.Serializer):
-    metadata = serializers.DictField()

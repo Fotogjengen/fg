@@ -11,17 +11,14 @@
 
 
   <div fxLayout="row" fxLayoutAlign="center center">
-    <div  fxLayout="row" *ngIf="!(store.photoRouteActive$ | async)">
+    <div *ngIf="!(store.photoRouteActive$ | async)" fxLayout="row">
       <label class="search-icon-button" for="search-input" (click)="onSearchEnter(searchBox.value)">
         <i class="fa fa-search" aria-hidden="true"></i>
       </label>
-      <input matInput [matAutocomplete]="fullsearch" (input)="onInputChange()" #searchBox class="search-input" id="search-input" type="text" (keyup.enter)="onSearchEnter(searchBox.value)"
+      <input #searchBox class="search-input" id="search-input" type="text" [(ngModel)]="searchInput" (keyup.enter)="onSearchEnter(searchBox.value)"
       />
     </div>
-    <button class="btn transparent open-menu" (click)="toggleMenu()">
-      <i class="fa fa-bars"></i>
-      <span fxHide.lt-sm="true">Meny</span>
-    </button>
+    <button class="btn transparent open-menu" (click)="toggleMenu()"><i class="fa fa-bars"></i> <span fxHide.lt-sm="true">Meny</span></button>
   </div>
 </header>
 
@@ -30,41 +27,16 @@
   <button class="btn transparent menu-closer" (click)="toggleMenu()">LUKK</button>
 
   <a *ngIf="!store.getUsernameAction()" (click)="showLoginModal()" class="login clickable"> Logg inn</a>
-  <div class="login" *ngIf="store.getUsernameAction()" fxLayout="row" fxLayoutAlign="space-between">
-    <span>
-      <i class="fa fa-user-o"></i> {{store.getUsernameAction()}}</span>
+  <div *ngIf="store.getUsernameAction()" fxLayout="row" fxLayoutAlign="space-between">
+    <span><i class="fa fa-user-o"></i> {{store.getUsernameAction()}}</span>
     <button (click)="store.logoutAction()" class="btn">Logg ut</button>
   </div>
 
   <ul class="links">
-    <li>
-      <a routerLink="forside" (click)="toggleMenu()">Forside</a>
-    </li>
-    <li>
-      <a routerLink="info" (click)="toggleMenu()">Info
-        <i class="fa fa-info-circle"></i>
-      </a>
-    </li>
-    <li>
-      <a routerLink="kontakt" (click)="toggleMenu()">Kontakt
-        <i class="fa fa-address-card-o"></i>
-      </a>
-    </li>
-    <li *ngIf="store.getUsernameAction()">
-      <a routerLink="handlekurv" (click)="toggleMenu()">Handlekurv
-        <i class="fa fa-shopping-cart"></i>
-      </a>
-    </li>
-    <li class="intern" *ngIf="store.getUsernameAction()">
-      <a routerLink="intern" (click)="toggleMenu()">Intern
-        <i class="fa fa-camera-retro"></i>
-      </a>
-    </li>
+    <li><a routerLink="forside" (click)="toggleMenu()">Forside</a></li>
+    <li><a routerLink="info" (click)="toggleMenu()">Info</a></li>
+    <li><a routerLink="kontakt" (click)="toggleMenu()">Kontakt</a></li>
+    <li><a routerLink="handlekurv" (click)="toggleMenu()">Handlekurv</a></li>
+    <li *ngIf="store.getUsernameAction()"><a routerLink="intern" (click)="toggleMenu()">Intern</a></li>
   </ul>
 </nav>
-
-<mat-autocomplete #fullsearch="matAutocomplete">
-  <mat-option *ngFor="let item of filteredStrings" [value]="item">
-    {{ item }}
-  </mat-option>
-</mat-autocomplete>

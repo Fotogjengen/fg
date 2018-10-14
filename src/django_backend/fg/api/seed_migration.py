@@ -33,10 +33,6 @@ def seed_foreign_keys(apps):
             for i in range(3):
                 obj = Mod(name=get_rand_string(4))
                 if model_name == 'Album':
-                    if i % 2 == 0:
-                        obj.name = 'DIG' + get_rand_string(2)
-                    else:
-                        obj.name = 'ANA' + get_rand_string(2)
                     obj.description = get_rand_string(8)
                 obj.save()
 
@@ -74,11 +70,10 @@ def load_photos(apps, schema_editor):
             media=get_random_object(apps, "api", "Media"),
             category=get_random_object(apps, "api", "Category"),
             splash=True if random.random() > 0.5 else False,
-            on_home_page=True if random.random() > 0.5 else False,
             page=i,
             image_number=i,
             security_level=get_random_object(apps, "api", "SecurityLevel"),
-            date_taken=datetime.now().astimezone(),
+            date_taken=datetime.now().astimezone()
         )
         photo_test.save()
         photo_test.tags.add(get_random_object(apps, "api", "Tag"))
@@ -89,7 +84,7 @@ def load_photos(apps, schema_editor):
 
 def generate_photo_file():
     image = Image.new(
-        'RGB', size=(200, 200),
+        'RGBA', size=(200, 200),
         color=(
             random.randint(0,255),
             random.randint(0,255),
@@ -102,20 +97,9 @@ def generate_photo_file():
 
 
 def populate_users(apps, schema_editor):
-    Job = apps.get_model('fg_auth', 'Job')
-    new_job = Job(name='foo', description='boo')
-    new_job.save()
-
-    # User and group models
-    User = apps.get_model('fg_auth', 'User')
-    Group = apps.get_model('auth', 'Group')
-
-    # Add User fg to group FG
-    fg_user = User.objects.get(username='fg')
-    fg_user.groups.add(Group.objects.get_or_create(name="FG")[0])
-    fg_user.save()
-
     for i in range(30):
+        User = apps.get_model('fg_auth', 'User')
+        Group = apps.get_model('auth', 'Group')
 
         img = generate_photo_file()
         fn = random.choice(FIRST_NAMES)
@@ -128,20 +112,17 @@ def populate_users(apps, schema_editor):
             address=random.choice(LAST_NAMES) + "'s Avenue " + str(random.randint(10, 300)),
             phone=random.randint(40000000, 99999999),
             opptaksaar=2010,
+            gjengjobb1="Latsabb",
+            gjengjobb2="Besserwisser",
             email=em
         )
         test_user.bilde.save('test.jpg', img)
         test_user.save()
-        test_user.gjengjobber.add(new_job)
 
         test_user.groups.add(
             Group.objects.get_or_create(name="FG" if random.random() > 0.3 else "POWER")[0]
         )
-        Group.objects.get_or_create(name="HUSFOLK")
         #fg_group.user_set.add(test_user)
-
-
-
 
 
 class Migration(migrations.Migration):

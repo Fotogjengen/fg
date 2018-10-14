@@ -1,10 +1,8 @@
-import { FileItem } from 'angular-file';
+import { IStatistics } from './../model';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Headers, RequestOptions } from '@angular/http';
-import {
-  IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage
-} from 'app/model';
+import { IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse } from 'app/model';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -20,9 +18,6 @@ export class ApiService {
     if (filters) {
       for (const key of Object.keys(filters)) {
         if (filters[key] !== null && filters[key] !== '') {
-          if (filters[key].length < 1) {
-            filters[key] = null;
-          }
           params = params.append(key, filters[key]);
         }
       }
@@ -30,20 +25,9 @@ export class ApiService {
     return this.http.get<IResponse<IPhoto>>(`/api/photos/`, { params: params });
   }
 
-  getAllMotives(): Observable<IResponse<string>> {
-    // Will not get motives on photos you don't have clearance for (see api/views in backend)
-    // Also has teh capability to add more data to /api/searchdata/ (see SearchAutocompleteDataViewSet)
-    return this.http.get<IResponse<string>>(`/api/searchdata/`);
-  }
-
   getPhotosFromIds(ids: string[]): Observable<IResponse<IPhoto>> {
     const params = new HttpParams().set('ids', ids.join());
     return this.http.get<IResponse<IPhoto>>(`/api/photos/list-from-ids`, { params });
-  }
-
-  getPhotosFromAlbumPageAndNumber(album: string, page: string, image_numbers: string[]): Observable<IResponse<number>> {
-    const params = new HttpParams().set('album', album).set('page', page).set('image_numbers', image_numbers.join());
-    return this.http.get<IResponse<number>>(`/api/photos/list-from-info`, { params });
   }
 
   getHomePagePhotos(filters: IFilters): Observable<IResponse<IPhoto>> {
@@ -109,15 +93,6 @@ export class ApiService {
         return this.http.get<IOrder[]>(`api/orders/`, { params });
     }
   }
-
-  getPhotoExif(id: number) {
-    return this.http.get<any>(`api/photos/metadata/${id}`);
-  }
-
-  getLatestPageAndImageNumber(albumID: number): Observable<ILatestImageAndPage> {
-    return this.http.get<ILatestImageAndPage>(`api/photos/upload-info/${albumID}`);
-  }
-
   toggleOrderCompleted(order: IOrder): Observable<IOrder> {
     return this.http.put<IOrder>(`api/orders/${order.id}/`, order);
   }
@@ -128,14 +103,6 @@ export class ApiService {
 
   updatePhoto(photo): Observable<any> {
     return this.http.patch(`/api/photos/${photo.id}/`, photo);
-  }
-
-  uploadScannedPhoto(data, id): Observable<any> {
-    const formData = new FormData();
-    for (const key of Object.keys(data)) {
-      formData.append(key, data[key]);
-    }
-    return this.http.patch(`/api/photos/${id}/`, formData);
   }
 
   updateUser(user: IUser): Observable<any> {

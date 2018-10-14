@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, Group
+from django.db.models.signals import post_save
 from django.utils import timezone
-from ..api.models import Photo
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class FGUserManager(BaseUserManager):
@@ -24,44 +27,34 @@ class FGUserManager(BaseUserManager):
         user.is_staff = True
         user.is_active = True
         user.is_superuser = True
+        user.groups.add(Group.objects.get_or_create(name="FG"))
         user.save()
-
-        group, created = Group.objects.get_or_create(name="FG")
-        group.user_set.add(user)
         return user
-
-
-class Job(models.Model):
-    objects = models.Manager()
-
-    name = models.CharField(max_length=64)
-    description = models.CharField(max_length=256)
-    date_created = models.DateTimeField(blank=True, default=timezone.now)
-
-    def __str__(self):
-        return self.name
 
 
 class User(AbstractUser):
     """fields in AbstractUser username, first_name, last_name, email"""
     # Personal info
     address = models.CharField(max_length=100, blank=True)
-    zip_code = models.CharField(null=True, blank=True, max_length=16)
+    zip_code = models.IntegerField(null=True, blank=True)
     city = models.CharField(max_length=30, blank=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     member_number = models.IntegerField(null=True, blank=True)
     # fg info
     opptaksaar = models.IntegerField(null=True, blank=True)
-    gjengjobber = models.ManyToManyField(Job, blank=True)
+    gjengjobb1 = models.CharField(max_length=255, blank=True)
+    gjengjobb2 = models.CharField(max_length=255, blank=True)
+    gjengjobb3 = models.CharField(max_length=255, blank=True)
     hjemmeside = models.CharField(max_length=255, blank=True)
     uker = models.CharField(max_length=255, blank=True)
     fg_kallenavn = models.CharField(max_length=255, blank=True)
     bilde = models.ImageField(
-        max_length=255, blank=True, upload_to='alle/fg_profile_images')
+        max_length=255, blank=True, upload_to='alle/fg_profile_images')  # TODO?
     aktiv_pang = models.BooleanField(default=False)
     comments = models.CharField(max_length=255, blank=True)
 
-    downloaded_photos = models.ManyToManyField(Photo, through='UserDownloadedPhoto')
+    downloaded_images = models.ManyToManyField(
+        "api.Photo", blank=True, through='DownloadedImages')
 
     objects = FGUserManager()
 
@@ -70,13 +63,17 @@ class User(AbstractUser):
     def __str__(self):
         return '%s %s - (%s)' % (self.first_name, self.last_name, self.username)
 
+    @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+    def create_auth_token(sender, instance=None, created=False, **kwargs):
+        if created:
+            Token.objects.create(user=instance)
 
-class UserDownloadedPhoto(models.Model):
-    objects = models.Manager()
 
-    photo = models.ForeignKey(Photo, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_downloaded = models.DateTimeField(blank=True, default=timezone.now)
 
-    def __str__(self):
-        return '[' + str(self.user) + '] downloaded ' + str(self.photo)
+class DownloadedImages(models.Model):
+    image = models.ForeignKey("api.Photo")
+    user = models.ForeignKey(User)
+    date_downloaded = models.DateField(auto_now_add=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Downloaded images'

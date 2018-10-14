@@ -1,15 +1,15 @@
 // links
-@mixin linx ($linkcolor) {
+@mixin linx ($link, $visit, $hover, $active) {
     a {
-        color: $linkcolor;
+        color: $link;
         &:visited {
-            filter: brightness($darken-percent);
+            color: $visit;
         }
         &:hover {
-            filter: brightness($lighten-percent);
+            color: $hover;
         }
         &:active {
-            filter: brightness($darken-percent);
+            color: $active;
         }
     }
 }

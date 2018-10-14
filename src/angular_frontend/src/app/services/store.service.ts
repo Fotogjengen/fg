@@ -1,3 +1,4 @@
+import { IStatistics } from './../model';
 import { Injectable } from '@angular/core';
 import { Router, ParamMap } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
@@ -5,14 +6,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ApiService } from 'app/services/api.service';
-import {
-  IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage
-} from 'app/model';
+import { IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder } from 'app/model';
 import { DELTA } from 'app/config';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
 import { ToastrService } from 'ngx-toastr';
-import * as _ from 'lodash';
 
 interface IForeignKeyModal {
   fk: IForeignKey;
@@ -27,8 +25,7 @@ export class StoreService {
   private _loginModal$ = new BehaviorSubject<ILoginRequest>(null);
   private _userModal$ = new BehaviorSubject<IUser>(null);
   private _foreignKeyModal$ = new BehaviorSubject<IForeignKeyModal>(null);
-  private _photoShoppingCart$ = new BehaviorSubject<IPhoto[]>(null);
-  private _searchTags$ = new BehaviorSubject<IForeignKey[]>(null);
+  private _photoShoppingCart$ = new BehaviorSubject<IPhoto[]>([]);
 
   public photoRouteActive$ = new Subject<boolean>();
   public photoModal$ = new BehaviorSubject<IPhoto>(null);
@@ -37,12 +34,9 @@ export class StoreService {
   public fgUsers$ = new BehaviorSubject<IUser[]>(null);
   public powerUsers$ = new BehaviorSubject<IUser[]>(null);
 
-  public latestPageAndImageNumber = new BehaviorSubject<ILatestImageAndPage>(null);
-
   public orders$: { [type: string]: BehaviorSubject<IOrder[]>; } = {};
 
-
-
+  // TODO
   private returnUrl;
 
   constructor(private api: ApiService, private router: Router, private toastr: ToastrService) {
@@ -70,30 +64,8 @@ export class StoreService {
     this._filters$.next(filters);
   }
 
-  setSearchTagsAction(tag: IForeignKey): void {
-    const tags = this.getSearchTagsValue();
-    if (tags.find(p => p.id === tag.id)) {
-      return;
-    }
-    tags.push(tag);
-    this._searchTags$.next(tags);
-  }
-
-  removeSearchTagAction(tag: IForeignKey): void {
-    const tags = this.getSearchTagsValue();
-    if (!tags.find(p => p.id === tag.id)) {
-      return;
-    }
-    tags.splice(tags.indexOf(tag), 1);
-    this._searchTags$.next(tags);
-  }
-
-  getSearchTagsAction(): Observable<IForeignKey[]> {
-    return this._searchTags$.asObservable();
-  }
-
   getHomePagePhotosAction(params: ParamMap) {
-    const filter: IFilters = params.get('page') ? { page: params.get('page') } : null;
+    const filter: IFilters = params.get('cursor') ? { cursor: params.get('cursor') } : null;
     this.api.getHomePagePhotos(filter).subscribe(
       pr => this._photos$.next(pr),
       err => this.toastr.error('Feil', JSON.parse(err.error).detail)
@@ -103,7 +75,7 @@ export class StoreService {
 
   getMoreHomePagePhotosAction() {
     if (this._photos$.getValue() && this._photos$.getValue().next) {
-      const filters = { page: this.getQueryParamValue(this._photos$.getValue().next, 'page') };
+      const filters = { cursor: this.getQueryParamValue(this._photos$.getValue().next, 'cursor') };
       this.setFiltersAction(filters);
       const currentPhotoList = this._photos$.getValue().results;
       this.api.getPhotos(filters).subscribe(pr => {
@@ -141,6 +113,10 @@ export class StoreService {
     const cart = this.getPhotoShoppingCartValue();
     cart.splice(cart.indexOf(photo), 1);
     this._photoShoppingCart$.next(cart);
+  }
+
+  getLatestPageAction() {
+
   }
 
   showLoginModalAction(returnUrl?) {
@@ -192,14 +168,8 @@ export class StoreService {
     const encodedCredentials = 'Basic ' + btoa(`${data.username}:${data.password}`);
     this.api.login(encodedCredentials).subscribe(res => {
       this.storeEncodedCredentials(res.username, res.groups, encodedCredentials);
-      /*
-      navigation after login based on group
-      TODO?: make this more dynamic instead of hardcoding routes here.
-      */
-      if (res.groups.indexOf('FG') !== -1) {
-        this.router.navigateByUrl('/intern/opplasting');
-      } else if (res.groups.indexOf('POWER') !== -1 || res.groups.indexOf('HUSFOLK') !== -1) {
-        this.router.navigateByUrl('/intern/søk');
+      if (this.returnUrl) {
+        this.router.navigateByUrl(this.returnUrl);
       }
       this._loginModal$.next(null);
       this.toastr.success(`Velkommen ${res.username} 😊`);
@@ -211,11 +181,9 @@ export class StoreService {
 
   logoutAction() {
     this.toastr.info(null, `På gjensyn ${localStorage.getItem('username')}! 👋`);
-    // removes localstorage
     localStorage.removeItem('Authorization');
     localStorage.removeItem('username');
     localStorage.removeItem('groups');
-    this.router.navigateByUrl('/'); // navigates back to root
   }
 
   getUsernameAction() {
@@ -237,36 +205,10 @@ export class StoreService {
     return this.foreignKeys$[type].asObservable();
   }
 
-  getFilteredAlbumsAction(type: string) {
-    const albums: IForeignKey[] = [];
-    this.api.getAlbums().subscribe(a => {
-      a.forEach(e => {
-        if (e['name'].substring(0, 3) === type) {
-          albums.push(e);
-        }
-      });
-    });
-    return albums;
-  }
-
-  getAnalogNotScannedIdsAction(album: string, page: string, image_numbers: string[]) {
-    return this.api.getPhotosFromAlbumPageAndNumber(album, page, image_numbers);
-  }
-
-  postAnalogPhotoAction() {
-    return null;
-  }
-
   postPhotoAction(data) {
     const formData = new FormData();
     for (const key of Object.keys(data)) {
-      if (key === 'tags') {
-        data[key].forEach(tag => {
-          formData.append(key, _.replace(tag, ' ', ''));
-        });
-      } else {
-        formData.append(key, data[key]);
-      }
+      formData.append(key, data[key]);
     }
     return this.api.postPhoto(formData);
   }
@@ -276,7 +218,7 @@ export class StoreService {
     return this.orders$[type].asObservable();
   }
 
-  toggleOrderCompletedAction(order: IOrder, type: string) {
+  toggleOrderCompleted(order: IOrder, type: string) {
     return this.api.toggleOrderCompleted(order).subscribe(() => this.getOrdersAction(type));
   }
 
@@ -306,10 +248,6 @@ export class StoreService {
 
   getPhotoShoppingCartValue(): IPhoto[] {
     return this._photoShoppingCart$.getValue() || [];
-  }
-
-  getSearchTagsValue(): IForeignKey[] {
-    return this._searchTags$.getValue() || [];
   }
 
   // Private methods

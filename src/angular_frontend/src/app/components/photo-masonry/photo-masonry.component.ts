@@ -3,16 +3,32 @@ import { trigger, transition, query, style, stagger, keyframes, animate } from '
 import { MasonryLayoutDirective } from 'app/directives';
 import { IPhoto, IFilters, IMasonryOptions } from 'app/model';
 import { StoreService } from 'app/services/store.service';
-import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'fg-photo-masonry',
   templateUrl: './photo-masonry.component.html',
-  styleUrls: ['./photo-masonry.component.scss']
+  styleUrls: ['./photo-masonry.component.scss'],
+  animations: [
+    trigger('photosAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          style({ opacity: 0, transform: 'translateY(-20%)' }),
+          { optional: true }
+        ),
+        query(
+          ':enter',
+          stagger('100ms', [
+            animate('100ms', style({ opacity: 1, transform: 'translateY(0)' }))
+          ]),
+          { optional: true }
+        )
+      ])
+    ])
+  ]
 })
-export class PhotoMasonryComponent implements OnInit {
+export class PhotoMasonryComponent {
   @Input() photos: IPhoto[];
-  inCartPhotos: number[];
 
   masonryOptions: IMasonryOptions = {
     itemSelector: '.grid-item',
@@ -20,28 +36,10 @@ export class PhotoMasonryComponent implements OnInit {
     stagger: 50
   };
 
-  constructor(protected store: StoreService) {
-    store.photoShoppingCart$.filter(p => !!p).subscribe(ps => this.inCartPhotos = ps.map(x => x.id));
-  }
+  constructor(private store: StoreService) { }
 
   onPhotoClick(photo: IPhoto) {
     this.store.photoModal$.next(photo);
-  }
-
-  ngOnInit() {
-    this.photos.forEach(p => {
-      if (this.inCartPhotos !== undefined && this.inCartPhotos.indexOf(p.id) !== -1) {
-        p.addedToCart = true;
-      }
-    });
-  }
-
-  addToShoppingCart(photo: IPhoto) {
-    this.store.addPhotoToCartAction(photo);
-  }
-
-  removeFromShoppingCart(photo: IPhoto) {
-    this.store.removePhotoFromCartAction(photo);
   }
 
   disableRightClick(event) {

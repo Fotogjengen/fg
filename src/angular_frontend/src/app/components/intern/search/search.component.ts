@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IForeignKey, IResponse, IPhoto, IFilters} from 'app/model';
+import { IForeignKey, IResponse, IPhoto } from 'app/model';
 import { DATE_OPTIONS } from 'app/config';
 import { ApiService, StoreService } from 'app/services';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,7 +13,8 @@ import * as moment from 'moment';
 })
 export class SearchComponent implements OnInit {
   searchForm: FormGroup;
-  response: IResponse<IPhoto>;
+  photoResponse: IResponse<IPhoto>;
+
   options = DATE_OPTIONS;
 
   albums: IForeignKey[];
@@ -21,13 +22,6 @@ export class SearchComponent implements OnInit {
   mediums: IForeignKey[];
   places: IForeignKey[];
   securityLevels: IForeignKey[];
-
-  motives: string[];
-  filteredMotives: string[] = [];
-  searching = false;
-  photosAreLoaded = false;
-
-  oldParams = {};
 
   truthies = [
     { name: '-- Alle --', value: null },
@@ -47,16 +41,12 @@ export class SearchComponent implements OnInit {
     api.getMediums().subscribe(x => this.mediums = [{ id: null, name: '-- Alle --' }, ...x]);
     api.getPlaces().subscribe(x => this.places = [{ id: null, name: '-- Alle --' }, ...x]);
     api.getSecurityLevels().subscribe(x => this.securityLevels = [{ id: null, name: '-- Alle --' }, ...x]);
-    api.getAllMotives().subscribe(x => {
-      this.motives = x['motives'];
-      this.filteredMotives = x['motives'];
-    });
   }
 
   ngOnInit() {
     this.searchForm = this.fb.group({
       motive: [, []],
-      tags: [[], []],
+      tags: [, []],
       date_taken_from: [, []],
       date_taken_to: [, []],
 
@@ -70,73 +60,15 @@ export class SearchComponent implements OnInit {
       on_home_page: [, []],
       splash: [, []]
     });
-    this.searchForm.get('motive').valueChanges.subscribe(m => {
-      this.filteredMotives = this.motives.filter(motive => motive.toLowerCase().indexOf(m) !== -1);
-    });
   }
 
-  initialize(filter: any) {
-    this.searchForm = this.fb.group({
-      motive: [filter.motive, []],
-      tags: [filter.tags ? this.initTags(filter.tags) : [], []],
-      sort: [filter.sort, []],
-      date_taken_from: [filter.date_taken_from, []],
-      date_taken_to: [filter.date_taken_to, []],
-      category: [filter.category, []],
-      media: [filter.media, []],
-      album: [filter.album, []],
-      place: [filter.place, []]
-    });
-    this.search(filter);
-  }
-
-  search(filter: IFilters) {
-    const searchVal = this.searchForm.value;
-    searchVal.tags = [];
-    this.store.getSearchTagsValue().forEach(t => searchVal.tags.push(t.id));
-    this.searchHasOwnProperty(filter);
-
-    this.router.navigate([], {
-      queryParams: filter
-    });
-
-    this.searching = true;
-    this.searchWithParams(filter);
-  }
-
-  searchHasOwnProperty(valObj) {
-    for (const key in valObj) {
-      if (valObj.hasOwnProperty(key)) {
-        if (valObj[key] !== null && valObj[key].length < 1) {
-          valObj[key] = null;
-        }
-      }
-    }
-  }
-
-  searchWithParams(params) {
-    this.api.getPhotos(params).subscribe(res => {
-      this.response = res;
-      this.oldParams = params; // saving old params to use later when changing page
-      this.searching = false;
-      this.photosAreLoaded = true;
-    });
-  }
-
-  initTags(tagNames): string[] {
-    tagNames = Array.isArray(tagNames) ? tagNames : [tagNames];
-    const tags: string[] = [];
-    this.api.getForeignKey('tags').subscribe(ts => {
-      if (ts['results']) {
-        ts['results'].forEach(tag => {
-          if (tagNames.includes(tag.id.toString())) {
-            tags.push(tag.name);
-            this.store.setSearchTagsAction(tag);
-          }
-        });
-      }
-    });
-    return tags;
+  search() {
+    const formValue = this.searchForm.value;
+    const date_taken_from = this.searchForm.value.date_taken_from ?
+      moment(this.searchForm.value.date_taken_from.jsdate).format('YYYY-MM-DD') : null;
+    const date_taken_to = this.searchForm.value.date_taken_to ?
+      moment(this.searchForm.value.date_taken_to.jsdates).format('YYYY-MM-DD') : null;
+    this.api.getPhotos({...formValue, date_taken_from, date_taken_to}).subscribe(p => this.photoResponse = p);
   }
 
   delete(photo: IPhoto) {
@@ -144,10 +76,10 @@ export class SearchComponent implements OnInit {
   }
 
   editAllMarked() {
-    const ids = this.response.results.filter(p => p.checkedForEdit).map(p => p.id);
+    const ids = this.photoResponse.results.filter(p => p.checkedForEdit).map(p => p.id);
     this.router.navigate(['../rediger'], {
       relativeTo: this.route,
-      queryParams: { id: ids }
+      queryParams: {id: ids}
     });
   }
 
@@ -157,20 +89,5 @@ export class SearchComponent implements OnInit {
 
   onPhotoClick(photo: IPhoto) {
     this.store.photoModal$.next(photo);
-  }
-
-  newParams(params: string) {
-    if (!params) { // if last page were without any params (page 1, no tags etc)
-      this.search({});
-    } else if (params.indexOf('=') === -1) {
-      this.search({...this.oldParams, page: params}); // unpacking old params and adding in new page param
-      // doing this to avoid passing all params from paginator.component
-    } else {
-      const paramObj = {};
-      params.split('&').forEach(param => {
-        paramObj[param.split('=')[0]] = param.split('=')[1];
-      });
-      this.search(paramObj);
-    }
   }
 }

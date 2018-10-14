@@ -39,8 +39,6 @@ export * from './intern/archive-admin/statistics/statistics.component';
 
 export * from './kontakt/person/person.component';
 export * from './photo-modal/photo-modal.component';
-export * from './photo-info-modal/photo-info-modal.component';
-export * from './metadata-modal/metadata-modal.component';
 export * from './not-found/not-found.component';
 export * from './login/login.component';
 export * from './shopping-cart/shopping-cart.component';

@@ -1,4 +1,4 @@
-<div class="text-input-box" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="5px" fxLayoutWrap fxFlex>
+<div class="text-input-box" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="5px">
   <chip *ngFor="let chip of chips" [chip]="chip" (onRemoveChip)="removeChip($event)"></chip>
   <input
     type="text"
@@ -7,14 +7,5 @@
     (keydown.backspace)="removeChipIfEmpty(chipInput.value)"
     (keyup.enter)="addChip(chipInput.value)"
     (keyup.shift.space)="addChip(chipInput.value)"
-    matInput
-    [matAutocomplete]="auto"
-    (input)="onInputChange()"
     >
 </div>
-<mat-autocomplete #auto="matAutocomplete">
-  <mat-option *ngFor="let tag of filteredTags" [value]="tag.name">
-    {{ tag.name }}
-  </mat-option>
-</mat-autocomplete>
-
