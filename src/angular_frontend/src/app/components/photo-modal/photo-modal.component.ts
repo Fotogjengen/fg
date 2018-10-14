@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { StoreService } from 'app/services/store.service';
 import { IPhoto } from 'app/model';
 import 'rxjs/add/operator/filter';
@@ -17,6 +17,13 @@ export class PhotoModalComponent {
       this.photo = p;
       this.shown = true;
     });
+  }
+
+  // Listenes to keyevent escape
+  @HostListener('document:keyup', ['$event']) close(event) {
+    if (event.keyCode === 27) {
+      this.shown = false;
+    }
   }
 
   addToShoppingCart() {
