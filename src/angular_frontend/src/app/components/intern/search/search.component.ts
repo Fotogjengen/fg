@@ -56,7 +56,7 @@ export class SearchComponent implements OnInit {
   ngOnInit() {
     this.searchForm = this.fb.group({
       motive: [, []],
-      tags: [[], []],
+      tags: [, []],
       date_taken_from: [, []],
       date_taken_to: [, []],
 
