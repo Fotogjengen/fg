@@ -15,7 +15,7 @@ export class PhotoInfoModalComponent implements OnInit {
  constructor ()  { }
 
   ngOnInit() {
-    console.log(this.photoDescription);
+    console.log('Description: ', this.photoDescription);
     this.showDescription = false;
 
   }

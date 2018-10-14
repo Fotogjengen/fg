@@ -1,8 +1,9 @@
 <ng-container *ngIf="photo?.photo && shown">
   <div (click)="shown = !shown" class="modal fixed">
     <img (contextmenu)="disableRightClick($event)" [src]="photo.photo.large" class="auto-width" alt="{{photo.motive}}" />
-  </div>
+    <button class="photo-info-modal-button">test</button>
   <fg-photo-info-modal  [photoDescription]="photo.description"></fg-photo-info-modal>
+  </div>
   <!-- <button class="btn btn-photo fixed z-over left" (click)="addToShoppingCart()" *ngIf="!photo.addedToCart">
     <i class="fa fa-cart-plus"></i> Kjøp
   </button>
