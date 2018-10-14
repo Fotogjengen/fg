@@ -38,5 +38,6 @@ urlpatterns = [
     url(r'^api/photos/upload-info/(?P<album_id>\d+)', api_views.get_latest_image_number_and_page_number, name="upload-info"),
     url(r'^api/photos/metadata/(?P<photo_id>\d+)', api_views.PhotoMetadataViewSet.as_view({'get': 'list'}), name="metadata"),
     url(r'^api/users/fg', auth_views.FgUsersView.as_view(), name="fg-users"),
-    url(r'^api/users/power', auth_views.PowerUsersView.as_view(), name="fg-users")
+    url(r'^api/users/power', auth_views.PowerUsersView.as_view(), name="fg-users"),
+    url(r'^api/photos/get-latest-date', api_views.get_date_of_last_photo_taken, name="latest-date"),
 ]

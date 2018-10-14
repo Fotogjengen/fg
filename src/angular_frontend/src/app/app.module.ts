@@ -69,7 +69,8 @@ import {
   AnalogUploadComponent,
   RegisterFilmComponent,
   UploadScannedComponent,
-  MetadataModalComponent
+  MetadataModalComponent,
+  AlbumsComponent,
 } from 'app/components';
 
 import {
@@ -138,7 +139,8 @@ import {RssService} from './services';
     UploadScannedComponent,
     MetadataModalComponent,
     PaginatorComponent,
-    PhotoInfoModalComponent
+    PhotoInfoModalComponent,
+    AlbumsComponent
   ],
   imports: [
     BrowserModule,

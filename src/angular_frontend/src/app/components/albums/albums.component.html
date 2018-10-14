@@ -1,0 +1,39 @@
+<div id="main container">
+  <section class="wrapper style1">
+    <div class="inner">
+      <!--selecting search conditions-->
+      <h1>Album</h1>
+      <div fxLayout.gt-md="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+        <form [formGroup]="filterForm" fxLayout="column" fxFlex="15" fxLayoutGap="20px">
+          <div fxLayout="column">
+              <label>Semester</label>
+              <select formControlName="semester">
+                <option [ngValue]="semester.id"  *ngFor="let semester of semester">
+                  {{ semester.name }}
+                </option>
+              </select>
+          </div>
+        </form>
+        <div fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
+
+        </div>
+      </div>
+
+      <!-- <div fxLayout="row" fxLayoutGap="20px" fxFlexAlign="center">
+        <form [formGroup]="cartForm" fxFill fxLayout.gt-md="row" fxLayout.lt-md="column" fxLayoutGap="30px">
+          <div fxLayout="column" fxFlex="15" fxLayoutGap="15px">
+            <div fxLayout="column">
+              <label>Semester</label>
+              <select formControlName="semester">
+                <option [ngValue]="semester.id"  *ngFor="let semester of semester">
+                  {{ semester.value }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div> -->
+      <!--Albums shown (default top 4)-->
+    </div>
+  </section>
+</div>

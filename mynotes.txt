@@ -1,0 +1,44 @@
+
+
+--Album side--
+
+## Hva trenger jeg av informasjon fra backend - lag slik at denne funksjonen kan utvides i fremtiden.
+
+    1. Trenger ikke å endre noe på informasjonen i databasen
+    2. Trenger ikke å oppdatere noe informasjon i databasen
+    4. Treger KUN å hente informasjon i databasen
+
+
+
+data:
+{
+    49 {
+        antall_bilder: integer
+        forsidebilde: photo
+        date?
+    }
+    48 {
+        antall bilder: integer
+        forsidebilde: photo
+    }
+    47 ...
+}
+
+dersom det blir klikket på bruk dato til å hente frem alle motiver som er tatt i den tidsrammen?
+- spørsmål: lages det nye motiver hver uke - eller gjenbrukes enkelte motiver?
+if: gjennbruk
+    hent frem bilder, sorter på motiver
+else:
+    hent frem alle bilder fra alle motiver i den uken
+
+IDE:
+lag ekstra funksjon for uka-bilder
+lag ekstra funksjon for isfit-bilder
+ - Skal det være en sammen med uke 39 (eks), eller skal man kunne velge mellom bilder fra samf, uka, isfit - så få bilder derfra?
+
+IDE:
+skal det alltid være uker? eller skal det være default, så kan man bytte ut med spesifikke motiver - eks. alle fotostand, alle konserter, alle ...
+fra ett semester?
+
+
+

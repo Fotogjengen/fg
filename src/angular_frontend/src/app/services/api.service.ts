@@ -1,10 +1,16 @@
 import { FileItem } from 'angular-file';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+<<<<<<< HEAD
 import {Headers, RequestOptions} from '@angular/http';
 import {
   IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage
 } from 'app/model';
+=======
+import { Headers, RequestOptions } from '@angular/http';
+// tslint:disable-next-line:max-line-length
+import { IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage, IDateTakenLatestPhoto } from 'app/model';
+>>>>>>> ed70350... Added Albums component. Retreiving time of last photo taken from backend
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -116,6 +122,10 @@ export class ApiService {
 
   getLatestPageAndImageNumber(albumID: number): Observable<ILatestImageAndPage> {
     return this.http.get<ILatestImageAndPage>(`api/photos/upload-info/${albumID}`);
+  }
+
+  getDateOfLatestPhotoTaken(): Observable<IDateTakenLatestPhoto> {
+    return this.http.get<IDateTakenLatestPhoto>(`api/photos/get-latest-date`);
   }
 
   toggleOrderCompleted(order: IOrder): Observable<IOrder> {
