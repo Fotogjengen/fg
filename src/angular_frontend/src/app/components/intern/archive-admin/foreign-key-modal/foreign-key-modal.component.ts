@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IForeignKey, ChangeEnum } from 'app/model';
-import { StoreService } from 'app/services';
+import {Component, OnInit, Input} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {IForeignKey, ChangeEnum} from 'app/model';
+import {StoreService} from 'app/services';
 
 
 @Component({
