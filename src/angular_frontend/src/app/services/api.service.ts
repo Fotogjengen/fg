@@ -1,7 +1,7 @@
 import { FileItem } from 'angular-file';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Headers, RequestOptions } from '@angular/http';
+import {Headers, RequestOptions} from '@angular/http';
 import {
   IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage
 } from 'app/model';
