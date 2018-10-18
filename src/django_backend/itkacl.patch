@@ -1,0 +1,32 @@
+t a/python-itkacl-2.0/setup.py b/python-itkacl-2.0/setup.py
+index ad302dc..9564991 100644
+--- a/python-itkacl-2.0/setup.py
++++ b/python-itkacl-2.0/setup.py
+@@ -5,6 +5,7 @@ setup.py file for ITKACL
+ """
+ 
+ from distutils.core import setup, Extension
++from distutils.command.build_py import build_py as _build_py
+ 
+ 
+ itkacl_module = Extension('_itkacl',
+@@ -12,10 +13,18 @@ itkacl_module = Extension('_itkacl',
+                            libraries=['itkacl'],
+                            )
+ 
++class build_py(_build_py, object):
++    def run(self):
++        # Because build_py is dependant on the files produced by
++        # build_ext, ensure build_ext is run first.
++        self.run_command('build_ext')
++        super(build_py, self).run()
++
+ setup (name = 'itkacl',
+        version = '2.0',
+        author      = "Steinar H. Gunderson",
+        description = """Python interface to ITKACL""",
+        ext_modules = [itkacl_module],
+        py_modules = ["itkacl"],
++       cmdclass = {'build_py': build_py},
+        )
+

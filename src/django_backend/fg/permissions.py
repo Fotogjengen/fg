@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+import itkacl
 
 
 class IsFGOrReadOnly(BasePermission):
