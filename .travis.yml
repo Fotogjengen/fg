@@ -48,6 +48,7 @@ jobs:
         - ng lint
         - ng build --prod
         - rsync -r dist/* fg@fgbeta.samfundet.no:./fg/src/angular_frontend/dist
+      '''
     - stage: deploy
       script: echo "Deploying to staging..."
       before_deploy:
@@ -62,6 +63,7 @@ jobs:
         script: bash $TRAVIS_BUILD_DIR/travis_deploy.sh
         on:
           branch: development
+       '''
 
 notifications:
   slack:
