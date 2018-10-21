@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IForeignKey, IResponse, IPhoto, PartialPhoto } from 'app/model';
-import { ApiService } from 'app/services';
-import { INgxMyDpOptions, IMyDate } from 'ngx-mydatepicker';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {IForeignKey, IResponse, IPhoto, PartialPhoto} from 'app/model';
+import {ApiService} from 'app/services';
+import {INgxMyDpOptions, IMyDate} from 'ngx-mydatepicker';
 
 
 @Component({
@@ -22,12 +22,12 @@ export class EditComponent {
   places: IForeignKey[];
   securityLevels: IForeignKey[];
 
-  constructor(private api: ApiService, private fb: FormBuilder, private route: ActivatedRoute) {
-    api.getAlbums().subscribe(x => this.albums = [{ id: null, name: '- - - - - -' }, ...x]);
-    api.getCategories().subscribe(x => this.categories = [{ id: null, name: '- - - - - -' }, ...x]);
-    api.getMediums().subscribe(x => this.mediums = [{ id: null, name: '- - - - - -' }, ...x]);
-    api.getPlaces().subscribe(x => this.places = [{ id: null, name: '- - - - - -' }, ...x]);
-    api.getSecurityLevels().subscribe(x => this.securityLevels = [{ id: null, name: '- - - - - -' }, ...x]);
+  constructor(private api: ApiService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+    api.getAlbums().subscribe(x => this.albums = [{id: null, name: '- - - - - -'}, ...x]);
+    api.getCategories().subscribe(x => this.categories = [{id: null, name: '- - - - - -'}, ...x]);
+    api.getMediums().subscribe(x => this.mediums = [{id: null, name: '- - - - - -'}, ...x]);
+    api.getPlaces().subscribe(x => this.places = [{id: null, name: '- - - - - -'}, ...x]);
+    api.getSecurityLevels().subscribe(x => this.securityLevels = [{id: null, name: '- - - - - -'}, ...x]);
 
     route.queryParamMap.subscribe(m => {
       api.getPhotosFromIds(m.getAll('id')).subscribe(p => {
@@ -46,7 +46,7 @@ export class EditComponent {
       motive: [this.photos.every(p => p.motive === this.photos[0].motive) ? firstPhoto.motive : null, []],
       tags: [this.photos.every(p => p.tags.every(t => t.name === p.tags[0].name)) ? firstPhoto.tags.map(t => t.name) : [], []],
       date_taken: [this.photos.every(p => p.date_taken === this.photos[0].date_taken) ?
-        { jsdate: new Date(firstPhoto.date_taken)} : null, []],
+        {jsdate: new Date(firstPhoto.date_taken)} : null, []],
 
       category: [this.photos.every(p => p.category.id === this.photos[0].category.id) ? firstPhoto.category.id : null, []],
       media: [this.photos.every(p => p.media.id === this.photos[0].media.id) ? firstPhoto.media.id : null, []],
@@ -73,12 +73,24 @@ export class EditComponent {
   // "date_taken": { "date": { "year": 2018, "month": 1, "day": 26 }, "jsdate": "2018-01-25T23:00:00.000Z"
   // "date_taken": "2018-01-20T15:08:54.817610Z"
 
-  update() {
+  async update() {
     if (this.editForm.valid) {
       let count = 0;
+      let didFail = false;
       for (const photo of this.photos) {
-        const formValues = { id: photo.id, ...this.getFormValue(this.editForm.value) };
-        this.api.updatePhoto(formValues).map(r => count++).subscribe(f => console.log(f + this.photos.length));
+        const formValues = {id: photo.id, ...this.getFormValue(this.editForm.value)};
+        this.api.updatePhoto(formValues).map(r => count++).subscribe(
+          f => console.log(f + this.photos.length),
+          () => {
+            didFail = true;
+          }
+        );
+      }
+      // Route back to search
+      if (!didFail) {
+        await this.router.navigate(['../søk'], {
+          relativeTo: this.route,
+        });
       }
     }
   }

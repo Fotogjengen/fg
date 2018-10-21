@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Router, ParamMap } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { ApiService } from 'app/services/api.service';
+import {Injectable} from '@angular/core';
+import {Router, ParamMap} from '@angular/router';
+import {HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {ApiService} from 'app/services/api.service';
 import {
   IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage
 } from 'app/model';
-import { DELTA } from 'app/config';
+import {DELTA} from 'app/config';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
-import { ToastrService } from 'ngx-toastr';
+import {ToastrService} from 'ngx-toastr';
 import * as _ from 'lodash';
 
 interface IForeignKeyModal {
@@ -30,8 +30,14 @@ export class StoreService {
   private _photoShoppingCart$ = new BehaviorSubject<IPhoto[]>(null);
   private _searchTags$ = new BehaviorSubject<IForeignKey[]>(null);
 
+  /*
+  * To use when you get back to search after editing photos, so it will automatically search with correct params
+  * No point in having this as a behaviorsubject afaik
+  */
+  public lastSearchedString: string = '';
+
   public photoRouteActive$ = new Subject<boolean>();
-  public photoModal$ = new BehaviorSubject<IPhoto>(null);
+  public photoModal$ = new BehaviorSubject<[IPhoto[], number]>(null);
 
   public foreignKeys$: { [type: string]: BehaviorSubject<IForeignKey[]>; } = {};
   public fgUsers$ = new BehaviorSubject<IUser[]>(null);
@@ -40,7 +46,6 @@ export class StoreService {
   public latestPageAndImageNumber = new BehaviorSubject<ILatestImageAndPage>(null);
 
   public orders$: { [type: string]: BehaviorSubject<IOrder[]>; } = {};
-
 
 
   private returnUrl;
@@ -93,7 +98,7 @@ export class StoreService {
   }
 
   getHomePagePhotosAction(params: ParamMap) {
-    const filter: IFilters = params.get('page') ? { page: params.get('page') } : null;
+    const filter: IFilters = params.get('page') ? {page: params.get('page')} : null;
     this.api.getHomePagePhotos(filter).subscribe(
       pr => this._photos$.next(pr),
       err => this.toastr.error('Feil', JSON.parse(err.error).detail)
@@ -103,7 +108,7 @@ export class StoreService {
 
   getMoreHomePagePhotosAction() {
     if (this._photos$.getValue() && this._photos$.getValue().next) {
-      const filters = { page: this.getQueryParamValue(this._photos$.getValue().next, 'page') };
+      const filters = {page: this.getQueryParamValue(this._photos$.getValue().next, 'page')};
       this.setFiltersAction(filters);
       const currentPhotoList = this._photos$.getValue().results;
       this.api.getPhotos(filters).subscribe(pr => {
@@ -144,7 +149,7 @@ export class StoreService {
   }
 
   showLoginModalAction(returnUrl?) {
-    this._loginModal$.next({ username: '', password: '' });
+    this._loginModal$.next({username: '', password: ''});
     this.returnUrl = returnUrl;
   }
 
@@ -153,39 +158,124 @@ export class StoreService {
   }
 
   showForeignKeyModalAction(fk: IForeignKey, type: string) {
-    this._foreignKeyModal$.next({ fk, type });
+    this._foreignKeyModal$.next({fk, type});
   }
 
   updateFgUserAction(user: IUser) {
-    return this.api.updateUser(user).subscribe(() => this.getFgUsersAction());
+    return this.api.updateUser(user).subscribe(
+      () => {
+        this.getFgUsersAction();
+        this.toastr.success(`Oppdaterte FGbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke oppdatere FGbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
+
   createFgUserAction(user: IUser) {
-    return this.api.createUser(user).subscribe(() => this.getFgUsersAction());
+    return this.api.createUser(user).subscribe(
+      () => {
+        this.getFgUsersAction();
+        this.toastr.success(`Opprettet FGbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke opprette FGbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
+
   deleteFgUserAction(user: IUser) {
-    return this.api.deleteUser(user).subscribe(() => this.getFgUsersAction());
+    return this.api.deleteUser(user).subscribe(
+      () => {
+        this.getFgUsersAction();
+        this.toastr.success(`Slettet FGbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke slette FGbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
 
   updatePowerUserAction(user: IUser) {
-    return this.api.updateUser(user).subscribe(() => this.getPowerUsersAction());
+    return this.api.updateUser(user).subscribe(
+      () => {
+        this.getPowerUsersAction();
+        this.toastr.success(`Oppdaterte powerbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke oppdatere powerbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
+
   createPowerUserAction(user: IUser) {
-    return this.api.createUser(user).subscribe(() => this.getPowerUsersAction());
+    return this.api.createUser(user).subscribe(
+      () => {
+        this.getPowerUsersAction();
+        this.toastr.success(`Opprettet powerbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke opprette powerbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
+
   deletePowerUserAction(user: IUser) {
-    return this.api.deleteUser(user).subscribe(() => this.getPowerUsersAction());
+    return this.api.deleteUser(user).subscribe(
+      () => {
+        this.getPowerUsersAction();
+        this.toastr.success(`Slettet powerbruker ${user.username}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke slette powerbruker ${user.username}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
 
   updateForeignKeyAction(fk: IForeignKey, type: string) {
-    return this.api.updateForeignKey(fk, type).subscribe(() => this.getForeignKeyAction(type));
+    return this.api.updateForeignKey(fk, type).subscribe(
+      () => {
+        this.getForeignKeyAction(type);
+        this.toastr.success(`Oppdaterte ${fk.name}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke oppdatere ${fk.name}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
 
   createForeignKeyAction(fk: IForeignKey, type: string) {
-    return this.api.createForeignKey(fk, type).subscribe(() => this.getForeignKeyAction(type));
+    return this.api.createForeignKey(fk, type).subscribe(
+      () => {
+        this.getForeignKeyAction(type);
+        this.toastr.success(`Opprettet ${fk.name}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke Opprette ${fk.name}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
 
   deleteForeignKeyAction(fk: IForeignKey, type: string) {
-    return this.api.deleteForeignKey(fk, type).subscribe(() => this.getForeignKeyAction(type));
+    return this.api.deleteForeignKey(fk, type).subscribe(
+      () => {
+        this.getForeignKeyAction(type);
+        this.toastr.success(`Slettet ${fk.name}`);
+      },
+      e => this.toastr.error(
+        `Kunne ikke slette ${fk.name}`,
+        `Errortype: ${e.error.split(' ')[0]}`
+      )
+    );
   }
 
   loginAction(data: ILoginRequest) {
@@ -204,7 +294,7 @@ export class StoreService {
       this._loginModal$.next(null);
       this.toastr.success(`Velkommen ${res.username} 😊`);
     }, err => {
-      this._loginModal$.next({ username: null, password: null, hasFailed: true });
+      this._loginModal$.next({username: null, password: null, hasFailed: true});
     });
   }
 
@@ -253,10 +343,6 @@ export class StoreService {
     return this.api.getPhotosFromAlbumPageAndNumber(album, page, image_numbers);
   }
 
-  postAnalogPhotoAction() {
-    return null;
-  }
-
   postPhotoAction(data) {
     const formData = new FormData();
     for (const key of Object.keys(data)) {
@@ -284,6 +370,7 @@ export class StoreService {
   get filters$() {
     return this._filters$.asObservable();
   }
+
   get photos$() {
     return this._photos$.asObservable();
   }

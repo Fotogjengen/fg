@@ -24,8 +24,8 @@ export class PhotoMasonryComponent implements OnInit {
     store.photoShoppingCart$.filter(p => !!p).subscribe(ps => this.inCartPhotos = ps.map(x => x.id));
   }
 
-  onPhotoClick(photo: IPhoto) {
-    this.store.photoModal$.next(photo);
+  onPhotoClick(i: number) {
+    this.store.photoModal$.next([this.photos, i]);
   }
 
   ngOnInit() {

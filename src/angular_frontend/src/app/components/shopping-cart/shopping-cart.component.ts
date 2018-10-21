@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ShoppingCartComponent implements OnInit {
   public cartForm: FormGroup;
   public regretRemovalArray: Array<IPhoto>;
+  private photosInShoppingCart: IPhoto[];
   public orderedPhotos: IPhoto[];
   public orderdedOrder: IOrder;
 
@@ -40,6 +41,7 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   createPhotoFormArray(photos: IPhoto[]) {
+    this.photosInShoppingCart = photos;
     return this.fb.array(photos.map(p => this.addOrderPhoto(p)));
   }
 
@@ -71,8 +73,9 @@ export class ShoppingCartComponent implements OnInit {
     this.api.getPhotosFromIds(orderPhotos).subscribe(p => this.orderedPhotos = p['results']);
   }
 
-  onPhotoClick(photo: IPhoto) {
-    this.store.photoModal$.next(photo);
+  onPhotoClick(i: number) {
+    console.log(this.orderedPhotos);
+    this.store.photoModal$.next([this.photosInShoppingCart, i]);
   }
 
   removePhotoFromCart(photo: IPhoto) {

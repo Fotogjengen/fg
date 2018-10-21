@@ -71,10 +71,8 @@ export class PartialPhoto {
   constructor(photo) {
     for (const key in photo) {
       if (photo[key] !== null) {
-        if (['album', 'category', 'media', 'place', 'security_level'].indexOf(key) !== -1) {
-          this[key] = photo[key].id;
-        } else if (key === 'date_taken') {
-          // this[key] = photo[key]['jsdate'].toISOString();
+        if (key === 'date_taken') {
+          this[key] = photo[key]['jsdate'].toISOString();
         } else {
           this[key] = photo[key];
         }
