@@ -1,6 +1,6 @@
-![Build Status](https://travis-ci.org/Samfundet/fg.svg?branch=master)](https://travis-ci.org/Samfundet/fg) Master
+![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=master)](https://travis-ci.org/Fotogjengen/fg) Master
 
-[![Build Status](https://travis-ci.org/Samfundet/fg.svg?branch=development)](https://travis-ci.org/Samfundet/fg) Development
+[![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=development)](https://travis-ci.org/Fotogjengen/fg) Development
 
 # Setup for Windows users
 
