@@ -37,7 +37,7 @@ jobs:
         - bash django-tests.sh
     - stage: test angular
       install:
-        - npm install -g @angular/cli@6.4
+        - npm install -g @angular/cli@1.6.3
         - cd src/angular_frontend && npm install
       script:
         - ng lint
