@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=master)](https://travis-ci.org/Fotogjengen/fg) Master
+[![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=master)](https://travis-ci.org/Fotogjengen/fg) Master
 
 [![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=development)](https://travis-ci.org/Fotogjengen/fg) Development
 
