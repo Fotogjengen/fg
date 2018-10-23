@@ -47,6 +47,6 @@ jobs:
 notifications:
   slack:
     rooms:
-      - fotogjengen:ibmoBhHV2Waiz2DzDY3EXqIx#the-bit-whisperers
       - secure: "CTQ8MVYEolu/J1jlpNYyaF4HkoFTr6JfCPk0BEMfANcE79CybG/5GAvvusVuD9s1dbFsat9TAH9Ra5fWLevQFr8qvM6oDbMqACFYVj6lEAXzdg/6jUdwb7oA4bdbS5V4zw3d7BS33hH9Uspi0r/SV4ee3CwAWcgsfeFfuViaRj7QKXJwk4XMFltO6yMK6aSK1wO/l3Mt6iu2e1gSgmQsgk6GGrwGiNu4yEHjoCArytOVQo+PvYwAqjnXcEEWEqm0YPM74E9xy8vsXcx2N+c9UhEatDFUD288yNezHtXhITz2lZooJ7SxzGDN7tC4Zg3rGGrqBfXYTH6KSr/zC4V9QpPLtAr7Sifq15hWiRamLcAPIiSVI6H1HtLeA9oPjM+HjiwDfpod1OUgnonHp6IHATPpcnGIslkav9FzhJaLPSAnbd+A6TUaLVD5cy4263mNbYI3TMrmjkxesnEeL8NUjVyo2Pq67fdtkt6H+Bc4fIfbWXKnraa1eoxWUBqjWf06016f7uGxXI3/YXcjW9rcTAzvIPjo9i9Pc8xPZD3nN1IfIThscA07rlXq/knDJmpzmdINkpAhMcMkMd+O+VjD0KbkG2dlm84CbMOfI7ZGjxCa+3q4NCSjrHx06vJoJkNyx5SPFvFjR5JmBwGqupmJ+d4dQVl4DiS/Yj+RvFZcdDA="
     on_failure: always
+    on_success: always
