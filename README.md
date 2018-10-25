@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/Samfundet/fg.svg?branch=master)](https://travis-ci.org/Samfundet/fg) Master
+[![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=master)](https://travis-ci.org/Fotogjengen/fg) Master
 
-[![Build Status](https://travis-ci.org/Samfundet/fg.svg?branch=development)](https://travis-ci.org/Samfundet/fg) Development
+[![Build Status](https://travis-ci.org/Fotogjengen/fg.svg?branch=development)](https://travis-ci.org/Fotogjengen/fg) Development
 
 # Setup for Windows users
 
@@ -13,6 +13,8 @@
     ```
     As defined in droprecreatedb.sh
 4. What's that? You would like to write frontend code and see live changes without reloading the docker container? Ok, fine. Go to `src/angular_frontend` and type `npm start` in your terminal. (you need [node](https://nodejs.org/en/) and run `npm i` once in the same folder)
+5. Generate docs with `npm run generate-docs`
+6. Run `npm run serve-docs` to access the docs at localhost:8080
 
 
 # Setup for normies (REEEEEEE)
