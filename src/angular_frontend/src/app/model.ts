@@ -45,6 +45,7 @@ export interface IPhoto {
   checkedForEdit?: boolean;
   // TODO gjør dette obligatorisk?
   description?: string;
+  week_taken: number;
 }
 
 export class PartialPhoto {
@@ -241,7 +242,8 @@ export const testData: IResponse<IPhoto> = {
       media: { name: 'med' },
       album: { name: 'alb' },
       place: { name: 'plc' },
-      security_level: { name: 'alle' }
+      security_level: { name: 'alle' },
+      week_taken: 23,
     }
   ]
 };

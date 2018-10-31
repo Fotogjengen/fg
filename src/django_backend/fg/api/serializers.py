@@ -95,7 +95,8 @@ class PhotoCreateSerializer(serializers.ModelSerializer):
             'scanned',
             'on_home_page',
             'splash',
-            'lapel'
+            'lapel',
+            'week_taken',
         )
 
     def create(self, validated_data):
@@ -228,3 +229,4 @@ class SearchAutocompleteDataSerializer(serializers.Serializer):
 
 class PhotoMetadataSerializer(serializers.Serializer):
     metadata = serializers.DictField()
+

@@ -1,14 +1,28 @@
-import {Observable} from 'rxjs/Observable';
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {INgxMyDpOptions, IMyDate} from 'ngx-mydatepicker';
-import {HttpEvent} from '@angular/common/http';
-import {StoreService, ApiService} from 'app/services';
-import {IForeignKey, ILatestImageAndPage, IFilters} from 'app/model';
-import {DATE_OPTIONS} from 'app/config';
-import {FileUploader, FileUploaderOptions, FileItem} from 'angular-file';
-import {ToastrService} from 'ngx-toastr';
-import {RssService} from '../../../services/rss.service';
+<<<<<<< HEAD
+import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { INgxMyDpOptions, IMyDate } from 'ngx-mydatepicker';
+import { HttpEvent } from '@angular/common/http';
+import { StoreService, ApiService } from 'app/services';
+import { IForeignKey, ILatestImageAndPage, IFilters } from 'app/model';
+import { DATE_OPTIONS } from 'app/config';
+import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
+import { ToastrService } from 'ngx-toastr';
+import { RssService } from '../../../services/rss.service';
+=======
+import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { INgxMyDpOptions, IMyDate } from 'ngx-mydatepicker';
+import { HttpEvent } from '@angular/common/http';
+import { StoreService, ApiService } from 'app/services';
+import { IForeignKey, ILatestImageAndPage, IFilters } from 'app/model';
+import { DATE_OPTIONS } from 'app/config';
+import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
+import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+>>>>>>> 4ee149c... WeekTaken field added to all photoes, calculated in front-end and sent with post request
 
 @Component({
   selector: 'fg-upload',
@@ -55,7 +69,7 @@ export class UploadComponent implements OnInit {
       image_number: [, [Validators.required]],
       motive: ['Motive_test', [Validators.required]],
       tags: [[], []],
-      date_taken: [{jsdate: new Date()}, [Validators.required]],
+      date_taken: [{ jsdate: new Date() }, [Validators.required]],
 
       category: [1, [Validators.required]],
       media: [1, [Validators.required]],
@@ -85,6 +99,13 @@ export class UploadComponent implements OnInit {
 
   uploadItem(item: FileItem, id: number) {
     const date_taken = this.uploadForm.value['date_taken']['jsdate'].toISOString();
+    const week_taken = moment(date_taken.substring(0, 10), 'YYYY-MM-DD').isoWeekday(1).isoWeek();
+    /*
+    this.latest_date = element.latest_date.substring(0, 10);
+      console.log(this.latest_date);
+      this.latest_week = moment(this.latest_date, 'YYYY-MM-DD').isoWeekday(1).isoWeek();
+      console.log(this.latest_week);
+    */
     if (this.uploadForm.valid) {
       item.isUploading = true;
       item.progress = 20;
@@ -95,15 +116,16 @@ export class UploadComponent implements OnInit {
         date_taken,
         splash: this.splashPhotos.indexOf(id) !== -1,
         lapel: this.lapelPhotos.indexOf(id) !== -1,
-        on_home_page: this.isFrontPagePhotos.indexOf(id) !== -1
+        on_home_page: this.isFrontPagePhotos.indexOf(id) !== -1,
+        week_taken,
       }).subscribe(event => {
-          console.log('Completed: ' + item._file.name);
-          this.toastr.success(null, 'Opplasting fullført 🔥');
-          item.progress = 100;
-          item.isUploaded = true;
-          item.isUploading = false;
-          item.isSuccess = true;
-        },
+        console.log('Completed: ' + item._file.name);
+        this.toastr.success(null, 'Opplasting fullført 🔥');
+        item.progress = 100;
+        item.isUploaded = true;
+        item.isUploading = false;
+        item.isSuccess = true;
+      },
         error => {
           item.isError = true;
           item.isUploading = false;
@@ -117,7 +139,7 @@ export class UploadComponent implements OnInit {
     const index = this.splashPhotos.indexOf(id);
     if (index === -1) {
       this.splashPhotos.push(id);
-    }else {
+    } else {
       this.splashPhotos.splice(index, 1);
     }
   }
@@ -126,7 +148,7 @@ export class UploadComponent implements OnInit {
     const index = this.lapelPhotos.indexOf(id);
     if (index === -1) {
       this.lapelPhotos.push(id);
-    }else {
+    } else {
       this.lapelPhotos.splice(index, 1);
     }
   }
@@ -135,7 +157,7 @@ export class UploadComponent implements OnInit {
     const index = this.isFrontPagePhotos.indexOf(id);
     if (index === -1) {
       this.isFrontPagePhotos.push(id);
-    }else {
+    } else {
       this.isFrontPagePhotos.splice(index, 1);
     }
   }
