@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from versatileimagefield.fields import VersatileImageField, PPOIField
+import datetime
 
 class Tag(models.Model):
     objects = models.Manager()
@@ -88,7 +89,8 @@ class Photo(models.Model):
     # Information describing the photo
     motive = models.CharField(max_length=256, db_index=True, blank=True, verbose_name='motives')
     description = models.CharField(max_length=2048, blank=True, null=True, verbose_name='descriptions')
-    date_taken = models.DateTimeField()
+    date_taken = models.DateTimeField(blank=False)
+    week_taken = models.IntegerField()
     date_modified = models.DateTimeField(auto_now=True)
     photo_ppoi = PPOIField()  # Point of interest dot, 2d vector
 

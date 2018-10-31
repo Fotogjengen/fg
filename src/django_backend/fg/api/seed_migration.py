@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import random, glob, string, tempfile
+import random, glob, string, tempfile, datetime
 from datetime import datetime
 from fg import settings
 from django.db import migrations
@@ -79,6 +79,7 @@ def load_photos(apps, schema_editor):
             image_number=i,
             security_level=get_random_object(apps, "api", "SecurityLevel"),
             date_taken=datetime.now().astimezone(),
+            week_taken=random.randint(1,5),
         )
         photo_test.save()
         photo_test.tags.add(get_random_object(apps, "api", "Tag"))

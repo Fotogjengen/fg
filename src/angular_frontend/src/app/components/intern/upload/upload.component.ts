@@ -8,6 +8,7 @@ import { IForeignKey, ILatestImageAndPage, IFilters } from 'app/model';
 import { DATE_OPTIONS } from 'app/config';
 import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 
 @Component({
   selector: 'fg-upload',
@@ -95,6 +96,13 @@ export class UploadComponent implements OnInit {
 
   uploadItem(item: FileItem) {
     const date_taken = this.uploadForm.value['date_taken']['jsdate'].toISOString();
+    const week_taken = moment(date_taken.substring(0, 10), 'YYYY-MM-DD').isoWeekday(1).isoWeek();
+    /*
+    this.latest_date = element.latest_date.substring(0, 10);
+      console.log(this.latest_date);
+      this.latest_week = moment(this.latest_date, 'YYYY-MM-DD').isoWeekday(1).isoWeek();
+      console.log(this.latest_week);
+    */
     if (this.uploadForm.valid) {
       item.isUploading = true;
       item.progress = 20;
@@ -103,6 +111,7 @@ export class UploadComponent implements OnInit {
         ...this.uploadForm.value,
         photo: item._file,
         date_taken,
+        week_taken,
       }).subscribe(event => {
         console.log('Completed: ' + item._file.name);
         this.toastr.success(null, 'Opplasting fullført 🔥');
