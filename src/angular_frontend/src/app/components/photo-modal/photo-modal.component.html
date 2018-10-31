@@ -1,7 +1,16 @@
 <ng-container *ngIf="shown_photo?.photo.photo && shown_photo.shown">
   <div (click)="shown_photo.shown = false" class="modal fixed">
-    <img (contextmenu)="disableRightClick($event)" [src]="shown_photo.photo.photo.large" class="auto-width"
+    <div class="wrapperDiv">
+          <button
+        matTooltip="Klikk for å legge til handlevogn"
+        matTooltipPosition="above"
+        matTooltipClass="matTooltip"
+          class="btn no-focus">Show description</button>
+
+      <img (contextmenu)="disableRightClick($event)" [src]="shown_photo.photo.photo.large" class="auto-width"
          alt="{{shown_photo.photo.motive}}"/>
+    </div>
+
   </div>
   <fg-photo-info-modal [photoDescription]="shown_photo.photo.description"></fg-photo-info-modal>
   <!-- <button class="btn btn-photo fixed z-over left" (click)="addToShoppingCart()" *ngIf="!photo.addedToCart">

@@ -15,13 +15,22 @@
 .fixed {
   position: fixed;
 }
+button {
+  position: absolute;
+  right:0;
+}
+/* wrapper div for å holde buttons på plass */
+.wrapperDiv {
+  position: relative;
+  max-width: 100% !important;
+}
 
 .z-over {
   z-index: 100002;
 }
 
 .auto-width {
-  max-width: 100%;
+  max-width: 100% !important;
   max-height: 100%;
 }
 
