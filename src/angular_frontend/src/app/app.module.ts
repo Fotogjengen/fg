@@ -21,6 +21,7 @@ import {AppComponent} from './app.component';
 
 import {ApiService} from './services/api.service';
 import {StoreService} from './services/store.service';
+import {DownloadService} from './services/download.service';
 import {AuthGuardService} from './services/auth-guard.service';
 import {OutAuthInterceptor} from './services/interceptor.service';
 import {MegabytePipe} from 'app/pipes/pipes.pipe';
@@ -170,7 +171,8 @@ import {
     },
     ApiService,
     StoreService,
-    AuthGuardService
+    AuthGuardService,
+    DownloadService
   ],
   bootstrap: [AppComponent],
 })

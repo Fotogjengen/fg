@@ -169,6 +169,7 @@ class PhotoViewSet(ModelViewSet):
             return models.Photo.objects.filter(security_level__name="ALLE")
 
 
+@api_view(['GET'])
 def get_latest_image_number_and_page_number(request, album_id='', analog=False):
     try:
         if album_id:

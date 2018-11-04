@@ -39,7 +39,7 @@
       <!--Download button-->
       <a *ngIf="store.getUsernameAction()"
               download
-              [href]="createDownloadlink(photo.photo.prod)"
+              [href]="download.createDownloadlink(photo.photo.prod)"
               matTooltip="Klikk for å laste ned"
               matTooltipPosition="above"
               matTooltipClass="matTooltip"

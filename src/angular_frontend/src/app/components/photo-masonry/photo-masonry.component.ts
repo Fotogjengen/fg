@@ -4,6 +4,7 @@ import {MasonryLayoutDirective} from 'app/directives';
 import {IPhoto, IFilters, IMasonryOptions} from 'app/model';
 import {StoreService} from 'app/services/store.service';
 import {OnInit, AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
+import {DownloadService} from '../../services/download.service';
 
 @Component({
   selector: 'fg-photo-masonry',
@@ -21,7 +22,7 @@ export class PhotoMasonryComponent implements OnInit {
   };
 
 
-  constructor(protected store: StoreService) {
+  constructor(protected store: StoreService, protected download: DownloadService) {
     /* TODO: When we decide to do shopping cart
      * Gets what is in the shopping cart
     store.photoShoppingCart$.filter(p => !!p).subscribe(ps => this.inCartPhotos = ps.map(x => x.id));
@@ -52,15 +53,6 @@ export class PhotoMasonryComponent implements OnInit {
   removeFromShoppingCart(photo: IPhoto) {
     this.store.removePhotoFromCartAction(photo);
   }*/
-
-  /*
-   * Create link from photos prod photo link
-  */
-  createDownloadlink(photo: string) {
-    const loc = location.href.split('/');
-    const str = loc[0] + '//' + loc[2] + photo;
-    return str;
-  }
 
   disableRightClick(event) {
     event.preventDefault();

@@ -81,7 +81,7 @@ export class SearchComponent implements OnInit {
       this.filteredMotives = this.motives.filter(motive => motive.toLowerCase().indexOf(m) !== -1);
     });
     // If we are routed back from "edit" then we will automatically search for the same as we had before we edited
-    if (this.store.lastSearchedString.length > 0) {
+    if (this.store.lastSearchedString !== undefined && this.store.lastSearchedString.length > 0) {
       this.initialize(JSON.parse(this.store.lastSearchedString));
       this.store.lastSearchedString = '';
     }
