@@ -34,7 +34,8 @@ export class StoreService {
   * To use when you get back to search after editing photos, so it will automatically search with correct params
   * No point in having this as a behaviorsubject afaik
   */
-  public lastSearchedString: string; // Might have to infer string literal
+
+  public lastSearchedString  = '';
 
   public photoRouteActive$ = new Subject<boolean>();
   public photoModal$ = new BehaviorSubject<[IPhoto[], number]>(null);
