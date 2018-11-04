@@ -229,7 +229,7 @@ AUTH_USER_MODEL = 'fg_auth.User'
 # LOGIN_URL = '/login'
 # LOGIN_REDIRECT_URL = '/'
 AUTHENTICATION_BACKENDS = (
-    'fg.fg_auth.backends.AdRemoteUserBackend'
+    'fg.fg_auth.backends.AdRemoteUserBackend',
 )
 
 # Groups
