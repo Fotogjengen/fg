@@ -13,8 +13,10 @@ from django.utils.decorators import decorator_from_middleware
 from .middlewares import ProxyRemoteUserMiddleware
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.authtoken.models import Token
+import itkacl
 
 from . import models, serializers
+from ..enums import Permission
 from ..paginations import UnlimitedPagination
 from ..permissions import IsFGOrReadOnly, IsFG
 
@@ -58,6 +60,14 @@ class PowerUsersView(ListAPIView):
         return models.User.objects.filter(groups__name="POWER").all()
 
 
-@decorator_from_middleware(ProxyRemoteUserMiddleware)
+# @decorator_from_middleware(ProxyRemoteUserMiddleware)
 def login_user(request):
-    return JsonResponse({"username": request.user.username})
+    # Find which security level you should have:
+    if itkacl.check('/web/fg', request.user.username):
+        permission = Permission.FG
+    elif itkacl.check('/web/alle', request.user.username):
+        permission = Permission.HUSFOLK
+    else:
+        permission = Permission.ALLE
+
+    return JsonResponse({"username": request.user.username, "permission": permission})

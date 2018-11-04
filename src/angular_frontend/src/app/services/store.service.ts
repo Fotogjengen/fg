@@ -6,7 +6,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {ApiService} from 'app/services/api.service';
 import {
-  IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage
+  IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage, PermissionEnum
 } from 'app/model';
 import {DELTA} from 'app/config';
 import 'rxjs/add/operator/debounceTime';
@@ -277,15 +277,15 @@ export class StoreService {
       )
     );
   }
-
+/*
   loginAction(data: ILoginRequest) {
     const encodedCredentials = 'Basic ' + btoa(`${data.username}:${data.password}`);
     this.api.login(encodedCredentials).subscribe(res => {
       this.storeEncodedCredentials(res.username, res.groups, encodedCredentials);
-      /*
+      /!*
       navigation after login based on group
       TODO?: make this more dynamic instead of hardcoding routes here.
-      */
+      *!/
       if (res.groups.indexOf('FG') !== -1) {
         this.router.navigateByUrl('/intern/opplasting');
       } else if (res.groups.indexOf('POWER') !== -1 || res.groups.indexOf('HUSFOLK') !== -1) {
@@ -297,7 +297,21 @@ export class StoreService {
       this._loginModal$.next({username: null, password: null, hasFailed: true});
     });
   }
+*/
 
+// New loginaction
+loginAction() {
+  this.api.login().subscribe(res => {
+    this.storeCredentials(res.username, res.permission);
+    if (res.permission === PermissionEnum.FG) {
+      this.router.navigateByUrl('/intern/opplasting');
+    } else if (res.permission === PermissionEnum.HUSFOLK) {
+      this.router.navigateByUrl('/intern/søk');
+    }
+    this._loginModal$.next(null);
+    this.toastr.success(`Velkommen ${res.username} 😊`);
+  }, err => this._loginModal$.next({username: null, password: null, hasFailed: true}));
+}
 
   logoutAction() {
     this.toastr.info(null, `På gjensyn ${localStorage.getItem('username')}! 👋`);
@@ -410,10 +424,16 @@ export class StoreService {
     this._photos$.next(r);
   }
 
+  /* TODO: DEPRECATED, Can remove this, but wait untill release so we are sure we dont need it
   private storeEncodedCredentials(username: string, groups: string[], encodedCredentials: string) {
     localStorage.setItem('Authorization', encodedCredentials);
     localStorage.setItem('username', username);
     localStorage.setItem('groups', JSON.stringify(groups));
+  }*/
+
+  private storeCredentials(username: string, permission: number) {
+    localStorage.setItem('username', username);
+    localStorage.setItem('permission', JSON.stringify(permission));
   }
 
   private getQueryParamValue(url: string, param: string): string {

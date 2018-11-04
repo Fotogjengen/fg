@@ -24,6 +24,7 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 export class LoginComponent {
   loginForm: FormGroup;
   shown = false;
+  loginPowerShown = false;
   wrongPassword;
 
   constructor(private store: StoreService, private fb: FormBuilder, private router: Router) {
@@ -41,8 +42,17 @@ export class LoginComponent {
     });
   }
 
-  login() {
+  // TODO
+  loginPower() {
+    return null;
+  }
+
+  loginHusfolk() {
+    /* TODO: Outdated, will use this for poweruser login probably
     this.store.loginAction(this.loginForm.value);
+    */
+    this.store.loginAction();
+    // this.router.navigateByUrl('/intern');
   }
 
   loginRejected() {

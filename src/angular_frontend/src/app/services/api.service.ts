@@ -165,13 +165,18 @@ export class ApiService {
     return this.http.post(`api/orders/`, order);
   }
 
-
+/* TODO: This is for powerusers. Dont need it for husfolk because apache does auth
   login(encodedCredentials: string): Observable<ILoginResponse> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('Authorization', encodedCredentials);
     return this.http.get<ILoginResponse>(`api/login/`, { headers });
   }
+  */
+
+login(): Observable<ILoginResponse> {
+  return this.http.get<ILoginResponse>(`api/login/`);
+}
 
   refreshToken(current_token): Observable<any> {
     return this.http.post(`api/token-refresh/`, { token: current_token });

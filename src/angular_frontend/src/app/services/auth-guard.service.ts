@@ -10,11 +10,13 @@ export class AuthGuardService implements CanActivate {
   constructor(private store: StoreService, private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    /* TODO fix this
     if (localStorage.getItem('username')) {
       return true;
     } else {
       this.store.showLoginModalAction(state.url);
       return false;
-    }
+    }*/
+    return true;
   }
 }
