@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from collections import namedtuple
 from django.db.models import Count, Max
 from django.db.models.functions import TruncYear
+import datetime
 
 from ..paginations import UnlimitedPagination, UpgradedPageNumberPagination
 from ..permissions import IsFGOrReadOnly, IsFG, IsFgOrPostOnly, IsFgOrHusfolk, IsFgOrHusfolkPostOnly
@@ -395,3 +396,26 @@ class PhotoMetadataViewSet(ViewSet):
         data = Metadata(metadata=photo._getexif())
         serializer = serializers.PhotoMetadataSerializer(data)
         return Response(serializer.data)
+
+
+class WeeklyAlbumsViewSet(ViewSet):
+    #må sjekke bilde-autentisering
+
+    def list(self, request):
+        #funksjon for å finne år basert på semester
+        #velge uker basert på semester (1-25 eller 26 til 52)
+        all_photos_in_range = models.Photo.objects.filter(date_taken__year=datetime.datetime.now().year, week_taken__range=(1,6)).order_by('week_taken')
+        wanted_elements_by_pk = []
+        for i in range(1,6):
+            if all_photos_in_range.filter(week_taken=i).exists():
+                for el in all_photos_in_range.filter(week_taken=i):
+                    wanted_elements_by_pk.append(el.pk)
+                    break
+            else:
+                continue
+
+        queryset = models.Photo.objects.filter(pk__in=wanted_elements_by_pk).order_by('week_taken')
+        serializer = serializers.PhotoSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+

@@ -230,3 +230,6 @@ class SearchAutocompleteDataSerializer(serializers.Serializer):
 class PhotoMetadataSerializer(serializers.Serializer):
     metadata = serializers.DictField()
 
+
+
+
