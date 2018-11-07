@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^api/users/fg', auth_views.FgUsersView.as_view(), name="fg-users"),
     url(r'^api/users/power', auth_views.PowerUsersView.as_view(), name="fg-users"),
     url(r'^api/photos/get-latest-date', api_views.get_date_of_last_photo_taken, name="latest-date"),
+    url(r'^api/photos/weekly', api_views.WeeklyAlbumsViewSet.as_view({'get': 'list'}), name="weekly"),
 ]
