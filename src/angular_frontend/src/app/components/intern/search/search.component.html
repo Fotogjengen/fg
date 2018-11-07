@@ -1,6 +1,7 @@
 <!-- Container -->
 <div fxLayout.gt-md="row" fxLayout.lt-md="column" fxLayoutGap="25px">
-  <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" fxLayout="column" fxFlex="25%" fxLayoutGap="15px">
+  <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" fxLayout="column" fxFlex="25%"
+        fxLayoutGap="15px">
     <div fxLayout="column">
       <label>Album</label>
       <select formControlName="album">
@@ -19,8 +20,9 @@
       <label>Fra Dato</label>
       <!-- <input type="text" formControlName="date_taken"> -->
       <div fxLayout="row" fxLayoutAlign="start">
-        <input fxFlex="100" (click)="dpFrom.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker [options]="options"
-          #dpFrom="ngx-mydatepicker" formControlName="date_taken_from">
+        <input fxFlex="100" (click)="dpFrom.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker
+               [options]="options"
+               #dpFrom="ngx-mydatepicker" formControlName="date_taken_from">
         <button type="button" class="btn btn-info" (click)="dpFrom.toggleCalendar()">
           <i class="fa fa-calendar"></i>
         </button>
@@ -30,8 +32,9 @@
       <label>Til Dato</label>
       <!-- <input type="text" formControlName="date_taken"> -->
       <div fxLayout="row" fxLayoutAlign="start">
-        <input fxFlex="100" (click)="dpTo.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker [options]="options"
-          #dpTo="ngx-mydatepicker" formControlName="date_taken_to">
+        <input fxFlex="100" (click)="dpTo.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker
+               [options]="options"
+               #dpTo="ngx-mydatepicker" formControlName="date_taken_to">
         <button type="button" class="btn btn-info" (click)="dpTo.toggleCalendar()">
           <i class="fa fa-calendar"></i>
         </button>
@@ -58,7 +61,8 @@
     <div fxLayout="column">
       <label>Sikkerhetsnivå</label>
       <select formControlName="security_level">
-        <option [ngValue]="securityLevel.id" *ngFor="let securityLevel of securityLevels">{{securityLevel.name}}</option>
+        <option [ngValue]="securityLevel.id" *ngFor="let securityLevel of securityLevels">{{securityLevel.name}}
+        </option>
       </select>
     </div>
 
@@ -96,11 +100,74 @@
   </form>
 
   <!-- Results box -->
-  <div class="search-table-container" fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
+  <div class="card-conatiner">
+    <div class="card" *ngFor="let photo of response?.results; let i = index" fxLayout="row" fxLayoutGap="2%">
+      <div>
+        <img class="card--img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
+      </div>
+      <div class="card--info" fxLayout="column" fxLayoutGap="2%">
+        <div class="card--info--row" fxLayout="row">
+          <label>
+            Motiv: {{photo?.motive}}
+          </label>
+        </div>
+        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+          <label>
+            Album: {{photo?.album.name}}
+          </label>
+          <label>
+            Dato: {{photo?.date_taken | date:'dMy'}}
+          </label>
+        </div>
+        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+          <label>
+            Kategori: {{photo?.category.name}}
+          </label>
+          <label>
+            Sted: {{photo?.place.name}}
+          </label>
+        </div>
+        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+          <label>
+            Rettighet: {{photo?.security_level.name}}
+          </label>
+          <label>
+            Oppslagsbilde: {{photo?.lapel}}
+          </label>
+          <label>
+            Skannet: {{photo?.scanned}}
+          </label>
+        </div>
+      </div>
+      <div fxLayout="column">
+        <div class="card--handlers">
+          <a class="btn btn-info" (click)="editSingle(photo.id)" fxFlexAlign="end">Endre</a>
+          <a class="btn btn-danger" (click)="delete(photo)" fxFlexAlign="end">Slett</a>
+          <!--
+          <div class="card--input-group">
+            <label [for]="i">Multiedit: </label>
+            <input [id]="i" class="card&#45;&#45;checkbox" type="checkbox" (click)="check($event, photo)">
+          </div>
+            -->
+        </div>
+        <div class="center" fxFlexAlign="end">
+          <label class="label">
+            <input class="label__checkbox" type="checkbox"/>
+            <span class="label__text">
+              <span class="label__check">
+                <i class="fa fa-check icon"></i>
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="search-table-container" fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
     <button class="btn" (click)="editAllMarked()">Endre alle markerte</button>
     <table class="search-table">
-      <thead class="search-table--head">
-        <tr class="search-table--head--row">
+      <thead class="search-table&#45;&#45;head">
+        <tr class="search-table&#45;&#45;head&#45;&#45;row">
           <td>Album</td>
           <td>Motiv</td>
           <td>Dato</td>
@@ -113,8 +180,8 @@
           <td>Endre</td>
         </tr>
       </thead>
-      <tbody class="search-table--body">
-        <tr *ngFor="let photo of response?.results; let i = index" class="search-table--body--row">
+      <tbody class="search-table&#45;&#45;body">
+        <tr *ngFor="let photo of response?.results; let i = index" class="search-table&#45;&#45;body&#45;&#45;row">
           <td>{{photo?.album.name}}</td>
           <td>{{photo?.motive}}</td>
           <td>{{photo?.date_taken | date:'dMy'}}</td>
@@ -124,17 +191,17 @@
           <td>{{photo?.scanned}}</td>
           <td>{{photo?.security_level.name}}</td>
           <td>
-            <img class="search-table--img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
+            <img class="search-table&#45;&#45;img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
           </td>
           <td fxLayout="column">
-            <a class="search-table--link" (click)="editSingle(photo.id)">Endre</a>
-            <a class="search-table--link" (click)="delete(photo)">Slett</a>
+            <a class="search-table&#45;&#45;link" (click)="editSingle(photo.id)">Endre</a>
+            <a class="search-table&#45;&#45;link" (click)="delete(photo)">Slett</a>
             <input type="checkbox" (click)="check($event, photo)">
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </div>-->
 </div>
 <div *ngIf="this.response">
   <fg-paginator (newParams)="newParams($event)" [response]="this.response"></fg-paginator>
