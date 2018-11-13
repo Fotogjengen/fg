@@ -139,8 +139,8 @@
           </label>
         </div>
       </div>
-      <div fxLayout="column">
-        <div class="card--handlers">
+      <div fxLayout="column" class="card--btns">
+        <div class="card--handlers" fxLayout="row" fxLayoutGap="5%" fxFlexAlign="end">
           <a class="btn btn-info" (click)="editSingle(photo.id)" fxFlexAlign="end">Endre</a>
           <a class="btn btn-danger" (click)="delete(photo)" fxFlexAlign="end">Slett</a>
           <!--
@@ -149,16 +149,17 @@
             <input [id]="i" class="card&#45;&#45;checkbox" type="checkbox" (click)="check($event, photo)">
           </div>
             -->
-        </div>
-        <div class="center" fxFlexAlign="end">
-          <label class="label">
-            <input class="label__checkbox" type="checkbox"/>
-            <span class="label__text">
-              <span class="label__check">
+          <div class="card--handlers--multiedit" fxFlexAlign="end">
+            <label class="card--handlers--multiedit--label">
+              <input class="card--handlers--multiedit--label--checkbox" type="checkbox" (click)="check(photo)"/>
+              <span class="card--handlers--multiedit--label--text">
+                Rediger flere
+              <span class="card--handlers--multiedit--label--check">
                 <i class="fa fa-check icon"></i>
               </span>
             </span>
-          </label>
+            </label>
+          </div>
         </div>
       </div>
     </div>
