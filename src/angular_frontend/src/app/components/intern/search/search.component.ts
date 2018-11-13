@@ -177,8 +177,8 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  check(checked, photo: IPhoto) {
-    photo.checkedForEdit = checked;
+  check(photo: IPhoto) {
+    photo.checkedForEdit = !photo.checkedForEdit;
   }
 
   onPhotoClick(i: number) {
