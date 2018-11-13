@@ -1,4 +1,5 @@
 @import '../../../../styles/_colors.scss';
+@import '../../../../styles/_mixins.scss';
 
 .card {
   padding: 1rem 0;
@@ -25,46 +26,28 @@
     &--multiedit {
       width: fit-content;
       white-space: nowrap;
-      &--label {
-        &--checkbox {
-          display: none;
-        }
-        &--checkbox:checked + &--text &--check {
-          animation: .2s forwards check;
-          .icon {
-            opacity: 1;
-            transform: scale(0);
-            color: white;
-            animation: icon .3s cubic-bezier(1.000, 0.008, 0.565, 1.650) .1s 1 forwards;
-          }
-        }
-        &--check {
-          border-radius: 50%;
-          border: 5px solid rgba(0,0,0,0.1);
-          background: white;
-          width: 2em;
-          height: 2em;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: border .3s ease;
-          float: right;
-          margin-right: 40%;
+      @include checkbox();
+    }
+  }
+}
 
-          i.icon {
-            opacity: 0.2;
-            font-size: 1.1rem;
-            color: transparent;
-            transition: opacity .3s .1s ease;
-            -webkit-text-stroke: 3px rgba(0,0,0,.5);
-          }
-
-          &:hover {
-            border: 5px solid rgba(0,0,0,0.2);
-          }
-        }
-      }
+.mobile {
+  width: inherit;
+  padding: 1rem 0;
+  border-bottom: #374c5f solid;
+  &--image {
+    width: 100%;
+    object-fit: contain;
+  }
+  &--metadata {
+    padding: 1rem 0;
+    & p {
+      margin: 0;
+    }
+  }
+  &--buttons {
+    &--multiedit {
+      @include checkbox();
     }
   }
 }
@@ -85,11 +68,11 @@
 @keyframes check {
   0% {
     opacity: 0.1;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
   }
   25% {
     opacity: 0.4;
-    background: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
   }
   50% {
     background: $success-light;

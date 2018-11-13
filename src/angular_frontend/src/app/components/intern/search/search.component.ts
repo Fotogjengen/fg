@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, HostListener} from '@angular/core';
 import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {IForeignKey, IResponse, IPhoto, IFilters} from 'app/model';
 import {DATE_OPTIONS} from 'app/config';
@@ -33,6 +33,7 @@ export class SearchComponent implements OnInit {
   filteredMotives: string[] = [];
   searching = false;
   photosAreLoaded = false;
+  screenWidth: any;
 
   oldParams = {};
 
@@ -85,6 +86,14 @@ export class SearchComponent implements OnInit {
       this.initialize(JSON.parse(this.store.lastSearchedString));
       this.store.lastSearchedString = '';
     }
+    // Sets screenwidth
+    this.screenWidth = window.innerWidth;
+  }
+
+  // Sets new screenwidth on resize
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth = window.innerWidth;
   }
 
   initialize(filter: any) {
