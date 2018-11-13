@@ -100,109 +100,123 @@
   </form>
 
   <!-- Results box -->
-  <div class="card-conatiner">
-    <div class="card" *ngFor="let photo of response?.results; let i = index" fxLayout="row" fxLayoutGap="2%">
-      <div>
-        <img class="card--img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
-      </div>
-      <div class="card--info" fxLayout="column" fxLayoutGap="2%">
-        <div class="card--info--row" fxLayout="row">
-          <label>
-            Motiv: {{photo?.motive}}
-          </label>
+  <!--Search view for BIG screens BEGIN-->
+  <div>
+    <div *ngFor="let photo of response?.results; let i = index">
+      <div class="card" *ngIf="this.screenWidth > 700" fxLayout="row" fxLayoutGap="2%">
+        <div>
+          <img class="card--img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
         </div>
-        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
-          <label>
-            Album: {{photo?.album.name}}
-          </label>
-          <label>
-            Dato: {{photo?.date_taken | date:'dMy'}}
-          </label>
-        </div>
-        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
-          <label>
-            Kategori: {{photo?.category.name}}
-          </label>
-          <label>
-            Sted: {{photo?.place.name}}
-          </label>
-        </div>
-        <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
-          <label>
-            Rettighet: {{photo?.security_level.name}}
-          </label>
-          <label>
-            Oppslagsbilde: {{photo?.lapel}}
-          </label>
-          <label>
-            Skannet: {{photo?.scanned}}
-          </label>
-        </div>
-      </div>
-      <div fxLayout="column" class="card--btns">
-        <div class="card--handlers" fxLayout="row" fxLayoutGap="5%" fxFlexAlign="end">
-          <a class="btn btn-info" (click)="editSingle(photo.id)" fxFlexAlign="end">Endre</a>
-          <a class="btn btn-danger" (click)="delete(photo)" fxFlexAlign="end">Slett</a>
-          <!--
-          <div class="card--input-group">
-            <label [for]="i">Multiedit: </label>
-            <input [id]="i" class="card&#45;&#45;checkbox" type="checkbox" (click)="check($event, photo)">
+        <div class="card--info" fxLayout="column" fxLayoutGap="2%">
+          <div class="card--info--row" fxLayout="row">
+            <label>
+              Motiv: {{photo?.motive}}
+            </label>
           </div>
-            -->
-          <div class="card--handlers--multiedit" fxFlexAlign="end">
-            <label class="card--handlers--multiedit--label">
-              <input class="card--handlers--multiedit--label--checkbox" type="checkbox" (click)="check(photo)"/>
-              <span class="card--handlers--multiedit--label--text">
-                Rediger flere
-              <span class="card--handlers--multiedit--label--check">
-                <i class="fa fa-check icon"></i>
-              </span>
-            </span>
+          <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+            <label>
+              Album: {{photo?.album.name}}
+            </label>
+            <label>
+              Dato: {{photo?.date_taken | date:'dd.M.yy'}}
+            </label>
+          </div>
+          <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+            <label>
+              Kategori: {{photo?.category.name}}
+            </label>
+            <label>
+              Sted: {{photo?.place.name}}
+            </label>
+          </div>
+          <div class="card--info--row" fxLayout="row" fxLayoutGap="5%">
+            <label>
+              Rettighet: {{photo?.security_level.name}}
+            </label>
+            <label>
+              Oppslagsbilde: {{photo?.lapel}}
+            </label>
+            <label>
+              Skannet: {{photo?.scanned}}
             </label>
           </div>
         </div>
+        <div fxLayout="column" class="card--btns">
+          <div class="card--handlers" fxLayout="row" fxLayoutGap="5%" fxFlexAlign="end">
+            <a class="btn btn-info" (click)="editSingle(photo.id)" fxFlexAlign="end">Endre</a>
+            <a class="btn btn-danger" (click)="delete(photo)" fxFlexAlign="end">Slett</a>
+            <!--
+            <div class="card--input-group">
+              <label [for]="i">Multiedit: </label>
+              <input [id]="i" class="card&#45;&#45;checkbox" type="checkbox" (click)="check($event, photo)">
+            </div>
+              -->
+            <div class="card--handlers--multiedit" fxFlexAlign="end">
+              <label class="card--handlers--multiedit--label">
+                <input class="card--handlers--multiedit--label--checkbox" type="checkbox" (click)="check(photo)"/>
+                <span class="card--handlers--multiedit--label--text">
+                Rediger flere
+                  <span class="card--handlers--multiedit--label--check">
+                    <i class="fa fa-check icon"></i>
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
+      <!--Search view for BIG screens END-->
+      <!--Search view for SMALL screens BEGIN-->
+      <div *ngIf="this.screenWidth <= 700">
+        <div class="mobile">
+          <img class="mobile--image" [src]="photo?.photo.small" alt="Bilde ikke her">
+          <div class="mobile--metadata" fxLayout="column">
+            <p>
+              <b>Motiv:</b> {{photo?.motive}}
+            </p>
+            <p>
+              <b>Album:</b> {{photo?.album.name}}
+            </p>
+            <p>
+              <b>Dato:</b> {{photo?.date_taken | date:'dd.M.yy'}}
+            </p>
+            <p>
+              <b>Kategori:</b> {{photo?.category.name}}
+            </p>
+            <p>
+              <b>Sted:</b> {{photo?.place.name}}
+            </p>
+            <p>
+              <b>Rettighet:</b> {{photo?.security_level.name}}
+            </p>
+            <p>
+              <b>Oppslagsbilde:</b> {{photo?.lapel}}
+            </p>
+            <p>
+              <b>Skannet:</b> {{photo?.scanned}}
+            </p>
+          </div>
+          <div class="mobile--buttons" fxLayout="row" fxLayoutGap="2%">
+            <a class="btn btn-info" (click)="editSingle(photo.id)" fxFlexAlign="end">Endre</a>
+            <a class="btn btn-danger" (click)="delete(photo)" fxFlexAlign="end">Slett</a>
+            <div class="mobile--buttons--multiedit" fxFlexAlign="end">
+              <label class="mobile--buttons--multiedit--label">
+                <input class="mobile--buttons--multiedit--label--checkbox" type="checkbox" (click)="check(photo)"/>
+                <span class="mobile--buttons--multiedit--label--text">
+                Rediger flere
+                  <span class="mobile--buttons--multiedit--label--check">
+                    <i class="fa fa-check icon"></i>
+                  </span>
+                </span>
+              </label>
+          </div>
+        </div>
+      </div>
+      <!--Search view for SMALL screens END-->
     </div>
   </div>
-  <!--<div class="search-table-container" fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
-    <button class="btn" (click)="editAllMarked()">Endre alle markerte</button>
-    <table class="search-table">
-      <thead class="search-table&#45;&#45;head">
-        <tr class="search-table&#45;&#45;head&#45;&#45;row">
-          <td>Album</td>
-          <td>Motiv</td>
-          <td>Dato</td>
-          <td>Kategori</td>
-          <td>Sted</td>
-          <td>Oppslag</td>
-          <td>Skannet</td>
-          <td>Rettighet</td>
-          <td>Miniatyr</td>
-          <td>Endre</td>
-        </tr>
-      </thead>
-      <tbody class="search-table&#45;&#45;body">
-        <tr *ngFor="let photo of response?.results; let i = index" class="search-table&#45;&#45;body&#45;&#45;row">
-          <td>{{photo?.album.name}}</td>
-          <td>{{photo?.motive}}</td>
-          <td>{{photo?.date_taken | date:'dMy'}}</td>
-          <td>{{photo?.category.name}}</td>
-          <td>{{photo?.place.name}}</td>
-          <td>{{photo?.lapel}}</td>
-          <td>{{photo?.scanned}}</td>
-          <td>{{photo?.security_level.name}}</td>
-          <td>
-            <img class="search-table&#45;&#45;img clickable hover-outline" (click)="onPhotoClick(i)" [src]="photo?.photo?.small">
-          </td>
-          <td fxLayout="column">
-            <a class="search-table&#45;&#45;link" (click)="editSingle(photo.id)">Endre</a>
-            <a class="search-table&#45;&#45;link" (click)="delete(photo)">Slett</a>
-            <input type="checkbox" (click)="check($event, photo)">
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>-->
+
+
 </div>
 <div *ngIf="this.response">
   <fg-paginator (newParams)="newParams($event)" [response]="this.response"></fg-paginator>
