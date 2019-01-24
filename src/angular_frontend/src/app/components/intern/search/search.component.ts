@@ -184,6 +184,7 @@ export class SearchComponent implements OnInit {
       relativeTo: this.route,
       queryParams: {id: photoID},
     });
+    console.log(photoID);
   }
 
   check(photo: IPhoto) {
