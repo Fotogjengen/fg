@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { StoreService, ApiService } from 'app/services';
-import { IForeignKey, ILatestImageAndPage, PartialPhoto, IPhoto, IResponse } from 'app/model';
-import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
-import { ToastrService } from 'ngx-toastr';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {StoreService, ApiService} from 'app/services';
+import {IForeignKey, ILatestImageAndPage, PartialPhoto, IPhoto, IResponse} from 'app/model';
+import {FileUploader, FileUploaderOptions, FileItem} from 'angular-file';
+import {ToastrService} from 'ngx-toastr';
+import {RssService} from '../../../../services/rss.service';
 
 
 @Component({
@@ -21,7 +22,12 @@ export class UploadScannedComponent implements OnInit {
   validComboDrag = false;
   invalidComboDrag = false;
 
-  constructor(private store: StoreService, private api: ApiService, private fb: FormBuilder, private toastr: ToastrService) {
+  constructor(
+    private store: StoreService,
+    private api: ApiService,
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+  ) {
     this.albums = store.getFilteredAlbumsAction('ANA');
   }
 
@@ -51,12 +57,12 @@ export class UploadScannedComponent implements OnInit {
       item.progress = 20;
       console.log(this.getFormValue(item).value['photo']);
       this.api.uploadScannedPhoto(this.getFormValue(item).value, id).subscribe(event => {
-        // console.log('Completed: ' + item._file.name);
-        item.progress = 100;
-        item.isUploaded = true;
-        item.isUploading = false;
-        item.isSuccess = true;
-      },
+          // console.log('Completed: ' + item._file.name);
+          item.progress = 100;
+          item.isUploaded = true;
+          item.isUploading = false;
+          item.isSuccess = true;
+        },
         error => {
           item.isError = true;
           item.isUploading = false;
@@ -66,6 +72,7 @@ export class UploadScannedComponent implements OnInit {
   }
 
   /* && this.uploadForm.value['photo_ids'].split(',').length === this.uploader.queue.length */
+
   /* upload() {
     if (this.uploadForm.valid) {
       this.store.getAnalogNotScannedIdsAction(

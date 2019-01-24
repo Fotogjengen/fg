@@ -32,6 +32,7 @@ export class EditComponent {
     route.queryParamMap.subscribe(m => {
       api.getPhotosFromIds(m.getAll('id')).subscribe(p => {
         this.photos = p.results;
+        console.log(m.getAll('id'));
         console.log(p);
 
         if (this.photos.length > 0) {

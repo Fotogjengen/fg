@@ -8,6 +8,7 @@ import {IForeignKey, ILatestImageAndPage, IFilters} from 'app/model';
 import {DATE_OPTIONS} from 'app/config';
 import {FileUploader, FileUploaderOptions, FileItem} from 'angular-file';
 import {ToastrService} from 'ngx-toastr';
+import {RssService} from '../../../services/rss.service';
 
 @Component({
   selector: 'fg-upload',
