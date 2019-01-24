@@ -134,10 +134,10 @@
               Rettighet: {{photo?.security_level.name}}
             </label>
             <label>
-              Oppslagsbilde: {{photo?.lapel}}
+              <b>Oppslagsbilde:</b> {{photo?.lapel === true ? 'Ja' : 'Nei'}}
             </label>
             <label>
-              Skannet: {{photo?.scanned}}
+              Skannet: {{photo?.scanned === true ? 'Ja' : 'Nei'}}
             </label>
           </div>
         </div>
@@ -190,10 +190,10 @@
               <b>Rettighet:</b> {{photo?.security_level.name}}
             </p>
             <p>
-              <b>Oppslagsbilde:</b> {{photo?.lapel}}
+              <b>Oppslagsbilde:</b> {{photo?.lapel === true ? 'Ja' : 'Nei'}}
             </p>
             <p>
-              <b>Skannet:</b> {{photo?.scanned}}
+              Skannet: {{photo?.scanned === true ? 'Ja' : 'Nei'}}
             </p>
           </div>
           <div class="mobile--buttons" fxLayout="row" fxLayoutGap="2%">
@@ -216,10 +216,10 @@
     </div>
   </div>
 
+    <div *ngIf="this.response">
+      <fg-paginator (newParams)="newParams($event)" [response]="this.response"></fg-paginator>
+    </div>
 
-</div>
-<div *ngIf="this.response">
-  <fg-paginator (newParams)="newParams($event)" [response]="this.response"></fg-paginator>
 </div>
 
 
