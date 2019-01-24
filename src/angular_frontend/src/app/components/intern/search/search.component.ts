@@ -179,7 +179,6 @@ export class SearchComponent implements OnInit {
 
   async editSingle(photoID: number) {
     this.store.lastSearchedString = this.lastSearchString;
-    console.log('hei');
     await this.router.navigate(['../rediger'], {
       relativeTo: this.route,
       queryParams: {id: photoID},

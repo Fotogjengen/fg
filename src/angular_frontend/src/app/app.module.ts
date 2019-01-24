@@ -79,6 +79,7 @@ import {
   BarchartComponent,
   PaginatorComponent
 } from 'app/utils';
+import {RssService} from './services';
 
 @NgModule({
   declarations: [
@@ -172,7 +173,8 @@ import {
     ApiService,
     StoreService,
     AuthGuardService,
-    DownloadService
+    DownloadService,
+    RssService
   ],
   bootstrap: [AppComponent],
 })

@@ -254,12 +254,17 @@ class PhotoListFromIds(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
+        print('------------------------------')
+        print('USER', user.groups)
+        print('------------------------------')
 
-        if (user.groups.exists() and user.is_active and 'FG' in user.groups.all()) or user.is_superuser:
-            ids = self.request.query_params.get('ids', []).split(',')
-            return models.Photo.objects.filter(id__in=ids)
-
-        return models.Photo.objects.none()
+        # if (user.groups.exists() and user.is_active and 'FG' in user.groups.all()) or user.is_superuser:
+        #     ids = self.request.query_params.get('ids', []).split(',')
+        #     return models.Photo.objects.filter(id__in=ids)
+        # TODO: We may need this. Dont delete, ask Caroline first
+        # return models.Photo.objects.none()
+        ids = self.request.query_params.get('ids', []).split(',')
+        return models.Photo.objects.filter(id__in=ids)
 
 
 class PhotoListFromAlbumPageAndImageNumber(ViewSet):
