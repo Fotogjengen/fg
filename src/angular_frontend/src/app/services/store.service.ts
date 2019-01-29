@@ -1,14 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Router, ParamMap} from '@angular/router';
-import {HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {ApiService} from 'app/services/api.service';
 import {
-  IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, ILatestImageAndPage, PermissionEnum
+  IResponse, IPhoto, IUser, IFilters, ILoginRequest, IForeignKey, IOrder, IStatistics, PermissionEnum
 } from 'app/model';
-import {DELTA} from 'app/config';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
 import {ToastrService} from 'ngx-toastr';
@@ -35,7 +33,7 @@ export class StoreService {
   * No point in having this as a behaviorsubject afaik
   */
 
-  public lastSearchedString  = '';
+  public lastSearchedString = '';
 
   public photoRouteActive$ = new Subject<boolean>();
   public photoModal$ = new BehaviorSubject<[IPhoto[], number]>(null);
@@ -43,9 +41,6 @@ export class StoreService {
   public foreignKeys$: { [type: string]: BehaviorSubject<IForeignKey[]>; } = {};
   public fgUsers$ = new BehaviorSubject<IUser[]>(null);
   public powerUsers$ = new BehaviorSubject<IUser[]>(null);
-
-  public latestPageAndImageNumber = new BehaviorSubject<ILatestImageAndPage>(null);
-
   public orders$: { [type: string]: BehaviorSubject<IOrder[]>; } = {};
 
 
@@ -278,41 +273,42 @@ export class StoreService {
       )
     );
   }
-/*
-  loginAction(data: ILoginRequest) {
-    const encodedCredentials = 'Basic ' + btoa(`${data.username}:${data.password}`);
-    this.api.login(encodedCredentials).subscribe(res => {
-      this.storeEncodedCredentials(res.username, res.groups, encodedCredentials);
-      /!*
-      navigation after login based on group
-      TODO?: make this more dynamic instead of hardcoding routes here.
-      *!/
-      if (res.groups.indexOf('FG') !== -1) {
+
+  /*
+    loginAction(data: ILoginRequest) {
+      const encodedCredentials = 'Basic ' + btoa(`${data.username}:${data.password}`);
+      this.api.login(encodedCredentials).subscribe(res => {
+        this.storeEncodedCredentials(res.username, res.groups, encodedCredentials);
+        /!*
+        navigation after login based on group
+        TODO?: make this more dynamic instead of hardcoding routes here.
+        *!/
+        if (res.groups.indexOf('FG') !== -1) {
+          this.router.navigateByUrl('/intern/opplasting');
+        } else if (res.groups.indexOf('POWER') !== -1 || res.groups.indexOf('HUSFOLK') !== -1) {
+          this.router.navigateByUrl('/intern/søk');
+        }
+        this._loginModal$.next(null);
+        this.toastr.success(`Velkommen ${res.username} 😊`);
+      }, err => {
+        this._loginModal$.next({username: null, password: null, hasFailed: true});
+      });
+    }
+  */
+
+// New loginaction
+  loginAction() {
+    this.api.login().subscribe(res => {
+      this.storeCredentials(res.username, res.permission);
+      if (res.permission === PermissionEnum.FG) {
         this.router.navigateByUrl('/intern/opplasting');
-      } else if (res.groups.indexOf('POWER') !== -1 || res.groups.indexOf('HUSFOLK') !== -1) {
+      } else if (res.permission === PermissionEnum.HUSFOLK) {
         this.router.navigateByUrl('/intern/søk');
       }
       this._loginModal$.next(null);
       this.toastr.success(`Velkommen ${res.username} 😊`);
-    }, err => {
-      this._loginModal$.next({username: null, password: null, hasFailed: true});
-    });
+    }, err => this._loginModal$.next({username: null, password: null, hasFailed: true}));
   }
-*/
-
-// New loginaction
-loginAction() {
-  this.api.login().subscribe(res => {
-    this.storeCredentials(res.username, res.permission);
-    if (res.permission === PermissionEnum.FG) {
-      this.router.navigateByUrl('/intern/opplasting');
-    } else if (res.permission === PermissionEnum.HUSFOLK) {
-      this.router.navigateByUrl('/intern/søk');
-    }
-    this._loginModal$.next(null);
-    this.toastr.success(`Velkommen ${res.username} 😊`);
-  }, err => this._loginModal$.next({username: null, password: null, hasFailed: true}));
-}
 
   logoutAction() {
     this.toastr.info(null, `På gjensyn ${localStorage.getItem('username')}! 👋`);
@@ -352,10 +348,6 @@ loginAction() {
       });
     });
     return albums;
-  }
-
-  getAnalogNotScannedIdsAction(album: string, page: string, image_numbers: string[]) {
-    return this.api.getPhotosFromAlbumPageAndNumber(album, page, image_numbers);
   }
 
   postPhotoAction(data) {
