@@ -28,8 +28,6 @@ export interface IPhoto {
   motive: string;
   date_taken: Date;
   photo_ppoi: string;
-  page: number;
-  image_number: number;
   lapel: boolean;
   scanned: boolean;
   on_home_page: boolean;
@@ -170,12 +168,6 @@ export interface IOrder {
   order_completed: boolean;
 }
 
-export interface ILatestImageAndPage {
-  album: number;
-  latest_page: number;
-  latest_image_number: number;
-}
-
 export interface IOrderPhoto {
   /* photo: IPhoto; */
   photo: number;
@@ -226,8 +218,6 @@ export const testData: IResponse<IPhoto> = {
       motive: 'desc',
       date_taken: new Date(),
       photo_ppoi: 'ppoi',
-      page: 13,
-      image_number: 37,
       lapel: false,
       scanned: false,
       on_home_page: false,
