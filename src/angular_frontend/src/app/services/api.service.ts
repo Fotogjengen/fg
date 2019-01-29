@@ -1,19 +1,17 @@
-import { FileItem } from 'angular-file';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import {Headers, RequestOptions} from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {
-  IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage
+  IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginResponse, IStatistics
 } from 'app/model';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 
 @Injectable()
 export class ApiService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getPhotos(filters: IFilters): Observable<IResponse<IPhoto>> {
     let params = new HttpParams();
@@ -27,7 +25,7 @@ export class ApiService {
         }
       }
     }
-    return this.http.get<IResponse<IPhoto>>(`/api/photos/`, { params: params });
+    return this.http.get<IResponse<IPhoto>>(`/api/photos/`, {params: params});
   }
 
   getAllMotives(): Observable<IResponse<string>> {
@@ -38,12 +36,7 @@ export class ApiService {
 
   getPhotosFromIds(ids: string[]): Observable<IResponse<IPhoto>> {
     const params = new HttpParams().set('ids', ids.join());
-    return this.http.get<IResponse<IPhoto>>(`/api/photos/list-from-ids`, { params });
-  }
-
-  getPhotosFromAlbumPageAndNumber(album: string, page: string, image_numbers: string[]): Observable<IResponse<number>> {
-    const params = new HttpParams().set('album', album).set('page', page).set('image_numbers', image_numbers.join());
-    return this.http.get<IResponse<number>>(`/api/photos/list-from-info`, { params });
+    return this.http.get<IResponse<IPhoto>>(`/api/photos/list-from-ids`, {params});
   }
 
   getHomePagePhotos(filters: IFilters): Observable<IResponse<IPhoto>> {
@@ -56,7 +49,7 @@ export class ApiService {
       }
     }
     params = params.append('on_home_page', 'true');
-    return this.http.get<IResponse<IPhoto>>(`/api/photos/`, { params: params });
+    return this.http.get<IResponse<IPhoto>>(`/api/photos/`, {params: params});
   }
 
   getSplashPhoto(): Observable<IPhoto> {
@@ -86,36 +79,37 @@ export class ApiService {
   getAlbums() {
     return this.http.get<IForeignKey[]>(`api/albums/`);
   }
+
   getCategories() {
     return this.http.get<IForeignKey[]>(`api/categories/`);
   }
+
   getMediums() {
     return this.http.get<IForeignKey[]>(`api/mediums/`);
   }
+
   getPlaces() {
     return this.http.get<IForeignKey[]>(`api/places/`);
   }
+
   getSecurityLevels() {
     return this.http.get<IForeignKey[]>(`api/security-levels/`);
   }
+
   getOrders(type: string): Observable<IOrder[]> {
     let params = new HttpParams();
     switch (type) {
       case 'old':
         params = params.set('order_completed', 'true');
-        return this.http.get<IOrder[]>(`api/orders/`, { params });
+        return this.http.get<IOrder[]>(`api/orders/`, {params});
       case 'new':
         params = params.set('order_completed', 'false');
-        return this.http.get<IOrder[]>(`api/orders/`, { params });
+        return this.http.get<IOrder[]>(`api/orders/`, {params});
     }
   }
 
   getPhotoExif(id: number) {
     return this.http.get<any>(`api/photos/metadata/${id}`);
-  }
-
-  getLatestPageAndImageNumber(albumID: number): Observable<ILatestImageAndPage> {
-    return this.http.get<ILatestImageAndPage>(`api/photos/upload-info/${albumID}`);
   }
 
   toggleOrderCompleted(order: IOrder): Observable<IOrder> {
@@ -141,9 +135,11 @@ export class ApiService {
   updateUser(user: IUser): Observable<any> {
     return this.http.put(`/api/users/${user.id}/`, user);
   }
+
   createUser(user: IUser): Observable<any> {
     return this.http.post(`/api/users/`, user);
   }
+
   deleteUser(user: IUser): Observable<any> {
     return this.http.delete(`/api/users/${user.id}/`);
   }
@@ -165,21 +161,21 @@ export class ApiService {
     return this.http.post(`api/orders/`, order);
   }
 
-/* TODO: This is for powerusers. Dont need it for husfolk because apache does auth
-  login(encodedCredentials: string): Observable<ILoginResponse> {
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('Authorization', encodedCredentials);
-    return this.http.get<ILoginResponse>(`api/login/`, { headers });
-  }
-  */
+  /* TODO: This is for powerusers. Dont need it for husfolk because apache does auth
+    login(encodedCredentials: string): Observable<ILoginResponse> {
+      const headers = new HttpHeaders()
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('Authorization', encodedCredentials);
+      return this.http.get<ILoginResponse>(`api/login/`, { headers });
+    }
+    */
 
-login(): Observable<ILoginResponse> {
-  return this.http.get<ILoginResponse>(`api/login/`);
-}
+  login(): Observable<ILoginResponse> {
+    return this.http.get<ILoginResponse>(`api/login/`);
+  }
 
   refreshToken(current_token): Observable<any> {
-    return this.http.post(`api/token-refresh/`, { token: current_token });
+    return this.http.post(`api/token-refresh/`, {token: current_token});
   }
 }
 
