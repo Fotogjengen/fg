@@ -1,14 +1,10 @@
-import {Observable} from 'rxjs/Observable';
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {INgxMyDpOptions, IMyDate} from 'ngx-mydatepicker';
-import {HttpEvent} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {StoreService, ApiService} from 'app/services';
-import {IForeignKey, ILatestImageAndPage, IFilters} from 'app/model';
+import {IForeignKey} from 'app/model';
 import {DATE_OPTIONS} from 'app/config';
-import {FileUploader, FileUploaderOptions, FileItem} from 'angular-file';
+import {FileUploader, FileItem} from 'angular-file';
 import {ToastrService} from 'ngx-toastr';
-import {RssService} from '../../../services/rss.service';
 
 @Component({
   selector: 'fg-upload',
@@ -20,7 +16,6 @@ export class UploadComponent implements OnInit {
   validComboDrag = false;
   invalidComboDrag = false;
   uploadForm: FormGroup;
-  uploadInfo: ILatestImageAndPage;
 
   options = DATE_OPTIONS;
 
@@ -51,8 +46,6 @@ export class UploadComponent implements OnInit {
   ngOnInit() {
     const date = new Date();
     this.uploadForm = this.fb.group({
-      page: [, [Validators.required, Validators.min(0), Validators.max(100)]],
-      image_number: [, [Validators.required]],
       motive: ['Motive_test', [Validators.required]],
       tags: [[], []],
       date_taken: [{jsdate: new Date()}, [Validators.required]],
@@ -62,24 +55,6 @@ export class UploadComponent implements OnInit {
       album: [, [Validators.required]],
       place: [1, [Validators.required]],
       security_level: [1, [Validators.required]],
-    });
-
-    this.uploadForm.get('album').valueChanges.subscribe(a => {
-      this.updateForm(a);
-    });
-  }
-
-  // Do this in backend instead?
-  updateForm(album: number, item?: FileItem, id?: number) {
-    this.api.getLatestPageAndImageNumber(album).subscribe(e => {
-      this.uploadInfo = e;
-      this.uploadForm.patchValue({
-        page: this.uploadInfo.latest_page,
-        image_number: this.uploadInfo.latest_image_number + 1
-      });
-      if (item) {
-        this.uploadItem(item, id);
-      }
     });
   }
 
@@ -117,25 +92,27 @@ export class UploadComponent implements OnInit {
     const index = this.splashPhotos.indexOf(id);
     if (index === -1) {
       this.splashPhotos.push(id);
-    }else {
+    } else {
       this.splashPhotos.splice(index, 1);
     }
   }
+
   // Pushes/Pops splashPhotos with list index of lapel photos
   makeLapel(id: number) {
     const index = this.lapelPhotos.indexOf(id);
     if (index === -1) {
       this.lapelPhotos.push(id);
-    }else {
+    } else {
       this.lapelPhotos.splice(index, 1);
     }
   }
+
   // Pushes/Pops splashPhotos with list index of homepage photos
   makeFrontPage(id: number) {
     const index = this.isFrontPagePhotos.indexOf(id);
     if (index === -1) {
       this.isFrontPagePhotos.push(id);
-    }else {
+    } else {
       this.isFrontPagePhotos.splice(index, 1);
     }
   }
@@ -151,7 +128,7 @@ export class UploadComponent implements OnInit {
     console.log('Uploading all');
     if (this.uploadForm.valid) {
       for (const item of this.uploader.queue.filter(i => !i.isSuccess)) {
-        this.updateForm(this.uploadForm.value['album'], item);
+      //  TODO: I think we can delete this entire function
       }
     }
   }
