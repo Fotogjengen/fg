@@ -1,17 +1,13 @@
 import { StoreService, ApiService } from 'app/services';
-import { INgxMyDpOptions, IMyDate } from 'ngx-mydatepicker';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import {
-  FormControl,
   FormGroup,
   FormBuilder,
   Validators
 } from '@angular/forms';
 import { DATE_OPTIONS } from 'app/config';
-import { IForeignKey, ILatestImageAndPage } from 'app/model';
-import { HttpResponse } from '@angular/common/http/src/response';
-import { DISABLED } from '@angular/forms/src/model';
+import { IForeignKey } from 'app/model';
 
 @Component({
   selector: 'fg-register-film',
@@ -21,7 +17,6 @@ import { DISABLED } from '@angular/forms/src/model';
 export class RegisterFilmComponent implements OnInit {
   uploadForm: FormGroup;
   options = DATE_OPTIONS;
-  uploadInfo: ILatestImageAndPage;
   startImage: number;
   numberOfImages: number;
 
@@ -67,12 +62,7 @@ export class RegisterFilmComponent implements OnInit {
       scanned: [false, [Validators.required]]
     });
     this.uploadForm.get('album').valueChanges.subscribe(a => {
-      this.api.getLatestPageAndImageNumber(a).subscribe(e => {
-        this.uploadInfo = e;
-        this.uploadForm.patchValue({
-          page: this.uploadInfo.latest_page + 1
-        });
-      });
+      // TODO: Get page and image number somehow (dont know how we'll do it yet)
     });
     this.uploadForm.get('start_image').valueChanges.subscribe(n => {
       this.startImage = n;
