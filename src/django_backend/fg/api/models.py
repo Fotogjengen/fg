@@ -71,9 +71,10 @@ def path_and_rename(instance, filename):
     image_type = '.%s' % filename.split('.')[-1]
     album = instance.album.name.upper()
     security_level = instance.security_level.name.upper()
-    page = str(instance.page).zfill(2)
-    image_number = str(instance.image_number).zfill(2)
-    return "%s/%s/%s" % (security_level, album, album + page + image_number + image_type)
+    # page = str(instance.page).zfill(2) TODO: Delete, this fucks up parallell upload
+    # image_number = str(instance.image_number).zfill(2) TODO: Delete, this fucks up parallell upload
+    photo_id = str(instance.id)
+    return "%s/%s/%s" % (security_level, album, album + photo_id + image_type)
 
 
 class Photo(models.Model):
