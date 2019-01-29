@@ -89,8 +89,6 @@ class PhotoCreateSerializer(serializers.ModelSerializer):
             'media',
             'album',
             'place',
-            'image_number',
-            'page',
             'tags',
             'scanned',
             'on_home_page',
@@ -121,9 +119,6 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
     )
     tags = TagListField(many=True)
 
-    # image_number = serializers.IntegerField(required=False)
-    # page = serializers.IntegerField(required=False)
-
     class Meta:
         model = models.Photo
         fields = (
@@ -135,8 +130,6 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
             'media',
             'album',
             'place',
-            'image_number',
-            'page',
             'tags',
             'scanned',
             'on_home_page',
@@ -147,8 +140,6 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.photo = validated_data.get('photo', instance.photo)
         instance.motive = validated_data.get('motive', instance.motive)
-        instance.image_number = validated_data.get('image_number', instance.image_number)
-        instance.page = validated_data.get('page', instance.page)
 
         instance.album = validated_data.get('album', instance.album)
         instance.place = validated_data.get('place', instance.place)
