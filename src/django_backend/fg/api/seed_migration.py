@@ -40,11 +40,13 @@ def seed_foreign_keys(apps):
                     obj.description = get_rand_string(8)
                 obj.save()
 
+
 def seed_security_levels(apps):
     SecurityLevel = apps.get_model("api", "SecurityLevel")
     for sec_name in settings.SECURITY_LEVELS:
         sec = SecurityLevel(name=sec_name)
         sec.save()
+
 
 def get_random_object(apps, app_name, model_string):
     Mod = apps.get_model(app_name, model_string)
@@ -64,7 +66,8 @@ def load_photos(apps, schema_editor):
 
     if not image_paths:
         raise ImportError(
-            "Could not find any photos in PHOTO_ROOT: " + settings.PHOTO_ROOT + ". Add images to development_images directory")
+            "Could not find any photos in PHOTO_ROOT: " + settings.PHOTO_ROOT +
+            ". Add images to development_images directory")
 
     for i, image_path in enumerate(image_paths):
         photo_test = Photo(
@@ -75,8 +78,8 @@ def load_photos(apps, schema_editor):
             category=get_random_object(apps, "api", "Category"),
             splash=True if random.random() > 0.5 else False,
             on_home_page=True if random.random() > 0.5 else False,
-            page=i,
-            image_number=i,
+            # page=i, TODO: Delete, this fucks up parallell upload
+            # image_number=i, TODO: Delete, this fucks up parallell upload
             security_level=get_random_object(apps, "api", "SecurityLevel"),
             date_taken=datetime.now().astimezone(),
         )
@@ -91,9 +94,9 @@ def generate_photo_file():
     image = Image.new(
         'RGB', size=(200, 200),
         color=(
-            random.randint(0,255),
-            random.randint(0,255),
-            random.randint(0,255)
+            random.randint(0, 255),
+            random.randint(0, 255),
+            random.randint(0, 255)
         )
     )
     file = tempfile.NamedTemporaryFile(suffix='.jpg')
@@ -116,7 +119,6 @@ def populate_users(apps, schema_editor):
     fg_user.save()
 
     for i in range(30):
-
         img = generate_photo_file()
         fn = random.choice(FIRST_NAMES)
         ln = random.choice(LAST_NAMES)
@@ -138,10 +140,7 @@ def populate_users(apps, schema_editor):
             Group.objects.get_or_create(name="FG" if random.random() > 0.3 else "POWER")[0]
         )
         Group.objects.get_or_create(name="HUSFOLK")
-        #fg_group.user_set.add(test_user)
-
-
-
+        # fg_group.user_set.add(test_user)
 
 
 class Migration(migrations.Migration):
