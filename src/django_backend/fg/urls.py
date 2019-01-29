@@ -3,6 +3,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from .api import views as api_views
 from .fg_auth import views as auth_views
+
 # from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 router = routers.DefaultRouter()
@@ -33,9 +34,9 @@ urlpatterns = [
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     # APIVIEW endpoints
     url(r'^api/photos/latest-splash', api_views.LatestSplashPhotoView.as_view(), name="latest-splash"),
-    url(r'^api/photos/list-from-info', api_views.PhotoListFromAlbumPageAndImageNumber.as_view({'get':'list'}), name='list-from-info'),
     url(r'^api/photos/list-from-ids', api_views.PhotoListFromIds.as_view(), name="list-from-ids"),
-    url(r'^api/photos/metadata/(?P<photo_id>\d+)', api_views.PhotoMetadataViewSet.as_view({'get': 'list'}), name="metadata"),
+    url(r'^api/photos/metadata/(?P<photo_id>\d+)', api_views.PhotoMetadataViewSet.as_view({'get': 'list'}),
+        name="metadata"),
     url(r'^api/users/fg', auth_views.FgUsersView.as_view(), name="fg-users"),
     url(r'^api/users/power', auth_views.PowerUsersView.as_view(), name="fg-users")
 ]
