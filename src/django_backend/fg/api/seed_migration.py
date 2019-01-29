@@ -78,8 +78,6 @@ def load_photos(apps, schema_editor):
             category=get_random_object(apps, "api", "Category"),
             splash=True if random.random() > 0.5 else False,
             on_home_page=True if random.random() > 0.5 else False,
-            # page=i, TODO: Delete, this fucks up parallell upload
-            # image_number=i, TODO: Delete, this fucks up parallell upload
             security_level=get_random_object(apps, "api", "SecurityLevel"),
             date_taken=datetime.now().astimezone(),
         )
