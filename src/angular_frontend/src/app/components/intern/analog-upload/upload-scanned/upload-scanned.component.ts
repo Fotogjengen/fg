@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {StoreService, ApiService} from 'app/services';
-import {IForeignKey, ILatestImageAndPage, PartialPhoto, IPhoto, IResponse} from 'app/model';
-import {FileUploader, FileUploaderOptions, FileItem} from 'angular-file';
+import {IForeignKey, IPhoto} from 'app/model';
+import {FileUploader, FileItem} from 'angular-file';
 import {ToastrService} from 'ngx-toastr';
-import {RssService} from '../../../../services/rss.service';
 
 
 @Component({
@@ -44,7 +43,7 @@ export class UploadScannedComponent implements OnInit {
     /* this.uploader.removeFromQueue(item);
     if (this.uploader.queue.length === 0) {
       this.uploader = new FileUploader();
-    } */
+    // } TODO */
     console.log(item);
   }
 
@@ -94,18 +93,7 @@ export class UploadScannedComponent implements OnInit {
   } */
 
   upload() {
-    if (this.uploadForm.valid) {
-      this.store.getAnalogNotScannedIdsAction(
-        this.uploadForm.value['album'].toString(),
-        this.uploadForm.value['page'].toString(),
-        this.uploadForm.value['image_numbers'].split(',')
-      ).subscribe(data => {
-        this.photo_ids = data['photo_ids'];
-        for (const item of this.uploader.queue.filter(i => !i.isSuccess)) {
-          this.uploadItem(item, this.photo_ids.pop());
-        }
-      });
-    }
+    //  TODO: Find a new way to upload analog photos. It needs to match with physical storage
   }
 
   getFormValue(item: FileItem) {
