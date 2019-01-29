@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from versatileimagefield.fields import VersatileImageField, PPOIField
 
+
 class Tag(models.Model):
     objects = models.Manager()
 
@@ -93,8 +94,8 @@ class Photo(models.Model):
     photo_ppoi = PPOIField()  # Point of interest dot, 2d vector
 
     # Meta information
-    page = models.IntegerField(db_index=True)
-    image_number = models.PositiveIntegerField(db_index=True)
+    # page = models.IntegerField(db_index=True) TODO: Delete, this fucks up parallell upload
+    # image_number = models.PositiveIntegerField(db_index=True) TODO: Delete, this fucks up parallell upload
     lapel = models.BooleanField(default=False, db_index=True)
     scanned = models.BooleanField(default=False, db_index=True)
     on_home_page = models.BooleanField(default=False, db_index=True)
@@ -119,12 +120,12 @@ class Photo(models.Model):
             orig = Photo.objects.get(pk=self.pk)
             if orig.album != self.album:
                 self.move_image_file_location()
-            elif orig.page != self.page:
-                self.move_image_file_location()
+            # elif orig.page != self.page: TODO: Delete, this fucks up parallell upload
+            #     self.move_image_file_location() TODO: Delete, this fucks up parallell upload
             elif orig.security_level != self.security_level:
                 self.move_image_file_location()
-            elif orig.image_number != self.image_number:
-                self.move_image_file_location()
+            # elif orig.image_number != self.image_number: TODO: Delete, this fucks up parallell upload
+            #     self.move_image_file_location() TODO: Delete, this fucks up parallell upload
         except ObjectDoesNotExist as e:
             logging.warning("move not required, photo instance does not already exist!")
             logging.warning(e)
@@ -157,9 +158,10 @@ class Photo(models.Model):
 
     def file_name(self, image_type=".jpg"):
         album = self.album.name.lower()
-        page = str(self.page).zfill(2)
-        image_number = str(self.image_number).zfill(2)
-        return album + page + image_number + image_type
+        # page = str(self.page).zfill(2) TODO: Delete, this fucks up parallell upload
+        # image_number = str(self.image_number).zfill(2) TODO: Delete, this fucks up parallell upload
+        photo_id = str(self.id)  # TODO: Does this work as new image path? if yes, delete this comment
+        return album + photo_id + image_type
 
     @staticmethod
     def create_dirs(dest):
@@ -174,7 +176,7 @@ class Photo(models.Model):
         get_latest_by = 'date_taken'
 
         # throws a django.db.utils.IntegrityError if you try to add a duplicate
-        unique_together = ('page', 'image_number', 'album')
+        # unique_together = ('page', 'image_number', 'album') TODO: Delete, this fucks up parallell upload
 
 
 class Order(models.Model):
