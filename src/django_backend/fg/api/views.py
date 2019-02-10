@@ -404,7 +404,11 @@ class WeeklyAlbumsViewSet(ViewSet):
     def list(self, request):
         #funksjon for å finne år basert på semester
         #velge uker basert på semester (1-25 eller 26 til 52)
-        all_photos_in_range = models.Photo.objects.filter(date_taken__year=datetime.datetime.now().year, week_taken__range=(1,6)).order_by('week_taken')
+        # 1-6 er kun for testingens skyld
+        # fikse år, i linjen kommentert ut hentes bilder fra i år
+            #all_photos_in_range = models.Photo.objects.filter(date_taken__year=datetime.datetime.now().year, week_taken__range=(1,6)).order_by('week_taken')
+        # under hentes bilder fra år 2018, det som ligger i testdb.
+        all_photos_in_range = models.Photo.objects.filter(date_taken__year=2018, week_taken__range=(1,6)).order_by('week_taken')
         wanted_elements_by_pk = []
         for i in range(1,6):
             if all_photos_in_range.filter(week_taken=i).exists():
