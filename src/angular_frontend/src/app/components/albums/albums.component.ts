@@ -10,6 +10,7 @@ import * as moment from 'moment';
   templateUrl: './albums.component.html',
   styleUrls: ['./albums.component.scss']
 })
+
 export class AlbumsComponent implements OnInit {
   public filterForm: FormGroup;
   semester = [];
@@ -18,15 +19,16 @@ export class AlbumsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private api: ApiService,
+    private api: ApiService
   ) { }
 
   ngOnInit() {
     this.calculateSemesters();
     this.filterForm = this.fb.group({
-      semester: [0, []],
+      semester: [0, []]
     });
     this.getDateAndWeekOfLastPhotoTaken();
+    this.getAlbumHeader();
   }
 
   calculateSemesters() {
@@ -34,13 +36,15 @@ export class AlbumsComponent implements OnInit {
     let begin, end;
     let identificator = 0;
     // check if the current date is in the fall or spring semester. end of semester = 1. july:
-    (new Date().getMonth() + 1 < 6 ? (begin = 0, end = 1) : (begin = 1, end = 0));
+    new Date().getMonth() + 1 < 6
+      ? ((begin = 0), (end = 1))
+      : ((begin = 1), (end = 0));
 
     // adding semesters to semesterlist
-    for (let year = (new Date()).getFullYear(); year >= 1910; year--) {
+    for (let year = new Date().getFullYear(); year >= 1910; year--) {
       this.semester.push(
-        { id: identificator++, name: semesters[begin] +  year},
-        { id: identificator++, name: semesters[end] + year},
+        { id: identificator++, name: semesters[begin] + year },
+        { id: identificator++, name: semesters[end] + year }
       );
     }
   }
@@ -49,14 +53,16 @@ export class AlbumsComponent implements OnInit {
     const test = this.api.getDateOfLatestPhotoTaken().subscribe(element => {
       this.latest_date = element.latest_date.substring(0, 10);
       console.log(this.latest_date);
-      this.latest_week = moment(this.latest_date, 'YYYY-MM-DD').isoWeekday(1).isoWeek();
+      this.latest_week = moment(this.latest_date, 'YYYY-MM-DD')
+        .isoWeekday(1)
+        .isoWeek();
       console.log(this.latest_week);
     });
   }
 
-
-
-
-
-
+  getAlbumHeader() {
+    this.api.getWeeklyAlbumHeader().subscribe(element => {
+      console.log(element);
+    });
+  }
 }
