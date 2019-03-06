@@ -1,16 +1,9 @@
 import { FileItem } from 'angular-file';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-<<<<<<< HEAD
-import {Headers, RequestOptions} from '@angular/http';
-import {
-  IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage
-} from 'app/model';
-=======
 import { Headers, RequestOptions } from '@angular/http';
 // tslint:disable-next-line:max-line-length
 import { IResponse, IPhoto, IUser, IOrder, IFilters, IForeignKey, ILoginRequest, ILoginResponse, IStatistics, ILatestImageAndPage, IDateTakenLatestPhoto } from 'app/model';
->>>>>>> ed70350... Added Albums component. Retreiving time of last photo taken from backend
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -175,18 +168,18 @@ export class ApiService {
     return this.http.post(`api/orders/`, order);
   }
 
-/* TODO: This is for powerusers. Dont need it for husfolk because apache does auth
-  login(encodedCredentials: string): Observable<ILoginResponse> {
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('Authorization', encodedCredentials);
-    return this.http.get<ILoginResponse>(`api/login/`, { headers });
-  }
-  */
+  /* TODO: This is for powerusers. Dont need it for husfolk because apache does auth
+    login(encodedCredentials: string): Observable<ILoginResponse> {
+      const headers = new HttpHeaders()
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('Authorization', encodedCredentials);
+      return this.http.get<ILoginResponse>(`api/login/`, { headers });
+    }
+    */
 
-login(): Observable<ILoginResponse> {
-  return this.http.get<ILoginResponse>(`api/login/`);
-}
+  login(): Observable<ILoginResponse> {
+    return this.http.get<ILoginResponse>(`api/login/`);
+  }
 
   refreshToken(current_token): Observable<any> {
     return this.http.post(`api/token-refresh/`, { token: current_token });

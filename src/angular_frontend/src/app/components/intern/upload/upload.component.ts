@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { INgxMyDpOptions, IMyDate } from 'ngx-mydatepicker';
-import { HttpEvent } from '@angular/common/http';
-import { StoreService, ApiService } from 'app/services';
-import { IForeignKey, ILatestImageAndPage, IFilters } from 'app/model';
-import { DATE_OPTIONS } from 'app/config';
-import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
-import { ToastrService } from 'ngx-toastr';
-import { RssService } from '../../../services/rss.service';
-=======
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -22,7 +9,8 @@ import { DATE_OPTIONS } from 'app/config';
 import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
->>>>>>> 4ee149c... WeekTaken field added to all photoes, calculated in front-end and sent with post request
+import { RssService } from '../../../services/rss.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'fg-upload',
