@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { StoreService, ApiService } from 'app/services';
-import { IForeignKey, IDateTakenLatestPhoto, IFilters } from 'app/model';
+import { IForeignKey, IDateTakenLatestPhoto, IFilters, IPhoto } from 'app/model';
 import { element } from 'protractor';
 import * as moment from 'moment';
+
 
 @Component({
   selector: 'fg-albums',
@@ -16,6 +17,9 @@ export class AlbumsComponent implements OnInit {
   semester = [];
   latest_date = ''; // format: YYYY-MM-DD
   latest_week = null;
+  smallimg = [];
+  public photos: IPhoto[];
+  loaded = false;
 
   constructor(
     private fb: FormBuilder,
@@ -60,9 +64,17 @@ export class AlbumsComponent implements OnInit {
     });
   }
 
+
   getAlbumHeader() {
-    this.api.getWeeklyAlbumHeader().subscribe(element => {
-      console.log(element);
+    this.api.getWeeklyAlbumHeader().subscribe(response => {
+      this.photos = response;
+      this.loaded = true;
+      console.log(this.photos);
+      console.log(response);
+      for (let i = 0; i < response.length; i++) {
+        const object = response[i];
+        this.smallimg.push(response[i].photo.small);
+      }
     });
   }
 }

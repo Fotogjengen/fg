@@ -184,5 +184,9 @@ export class ApiService {
   refreshToken(current_token): Observable<any> {
     return this.http.post(`api/token-refresh/`, { token: current_token });
   }
+
+  getWeeklyAlbumHeader(): Observable<IPhoto[]> {
+    return this.http.get<IPhoto[]>(`/api/photos/weekly`);
+  }
 }
 
