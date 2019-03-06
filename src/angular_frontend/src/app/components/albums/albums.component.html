@@ -15,25 +15,12 @@
           </div>
         </form>
         <div fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
-
+        <fg-masonry *ngIf="loaded"  [photos]="photos"></fg-masonry>
+        <!--<div *ngFor="let img of smallimg">
+          <img [src]="img" />
+        </div>-->
         </div>
       </div>
-
-      <!-- <div fxLayout="row" fxLayoutGap="20px" fxFlexAlign="center">
-        <form [formGroup]="cartForm" fxFill fxLayout.gt-md="row" fxLayout.lt-md="column" fxLayoutGap="30px">
-          <div fxLayout="column" fxFlex="15" fxLayoutGap="15px">
-            <div fxLayout="column">
-              <label>Semester</label>
-              <select formControlName="semester">
-                <option [ngValue]="semester.id"  *ngFor="let semester of semester">
-                  {{ semester.value }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </form>
-      </div> -->
-      <!--Albums shown (default top 4)-->
     </div>
   </section>
 </div>

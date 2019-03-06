@@ -1,31 +1,31 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule, LOCALE_ID} from '@angular/core';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import {ngfModule} from 'angular-file';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {NgxMyDatePickerModule} from 'ngx-mydatepicker';
-import {ClickOutsideModule} from 'ng-click-outside';
-import {NgProgressModule} from '@ngx-progressbar/core';
-import {NgProgressHttpClientModule} from '@ngx-progressbar/http-client';
-import {registerLocaleData} from '@angular/common';
-import {MatTooltipModule, MatAutocompleteModule} from '@angular/material';
-import {ToastrModule} from 'ngx-toastr';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ngfModule } from 'angular-file';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
+import { ClickOutsideModule } from 'ng-click-outside';
+import { NgProgressModule } from '@ngx-progressbar/core';
+import { NgProgressHttpClientModule } from '@ngx-progressbar/http-client';
+import { registerLocaleData } from '@angular/common';
+import { MatTooltipModule, MatAutocompleteModule } from '@angular/material';
+import { ToastrModule } from 'ngx-toastr';
 import localeNb from '@angular/common/locales/nb';
 
 registerLocaleData(localeNb);
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
-import {ApiService} from './services/api.service';
-import {StoreService} from './services/store.service';
-import {DownloadService} from './services/download.service';
-import {AuthGuardService} from './services/auth-guard.service';
-import {OutAuthInterceptor} from './services/interceptor.service';
-import {MegabytePipe} from 'app/pipes/pipes.pipe';
-import {MasonryLayoutDirective, ImagePreviewDirective} from 'app/directives';
+import { ApiService } from './services/api.service';
+import { StoreService } from './services/store.service';
+import { DownloadService } from './services/download.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { OutAuthInterceptor } from './services/interceptor.service';
+import { MegabytePipe } from 'app/pipes/pipes.pipe';
+import { MasonryLayoutDirective, ImagePreviewDirective } from 'app/directives';
 import {
   NavComponent,
   GalleryComponent,
@@ -80,7 +80,9 @@ import {
   BarchartComponent,
   PaginatorComponent
 } from 'app/utils';
-import {RssService} from './services';
+import { RssService } from './services';
+
+import { MasonryComponent } from './components/albums/masonry/masonry.component';
 
 @NgModule({
   declarations: [
@@ -140,7 +142,8 @@ import {RssService} from './services';
     MetadataModalComponent,
     PaginatorComponent,
     PhotoInfoModalComponent,
-    AlbumsComponent
+    AlbumsComponent,
+    MasonryComponent
   ],
   imports: [
     BrowserModule,

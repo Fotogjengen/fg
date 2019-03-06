@@ -10,7 +10,6 @@ import { FileUploader, FileUploaderOptions, FileItem } from 'angular-file';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { RssService } from '../../../services/rss.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'fg-upload',
