@@ -55,6 +55,7 @@ deploy:
   skip_cleanup: true
   on:
     branch: automatic_release_master
+    tags: true
 
 notifications:
   slack:
