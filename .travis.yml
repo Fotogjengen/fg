@@ -41,16 +41,18 @@ jobs:
     script:
     - ng lint
     - ng build --prod
+    - zip -r app.zip dist/app
 
-  - stage: Deploy
-    script: echo "Running realeases"
-    script: ls
-    script: zip dist.zip src/angular_frontend/dist
-    provider: releases
-    file: "dist.zip"
-    skip_cleanup: true
-    on:
-      tags: true
+Deploy:
+  script: echo "Running realeases"
+  script: ls
+  script: zip dist.zip src/angular_frontend/dist
+  provider: releases
+  file: "app.zip"
+  skip_cleanup: true
+  on:
+    tags: true
+
 notifications:
   slack:
   secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
