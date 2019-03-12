@@ -42,8 +42,12 @@ jobs:
     - ng lint
     - ng build --prod
     - zip -r app.zip dist/
-
-Deploy:
+before_deploy:
+  - git config --local user.name "pernilak"
+  - git config --local user.email "peklevstuen@gmail.com"
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
+deploy:
   script: echo "Running realeases"
   script: ls
   provider: releases
