@@ -1,58 +1,58 @@
 sudo: required
 language: node_js
 node_js:
-- '8'
+        - '8'
 services:
-- docker
+        - docker
 cache:
-  directories:
-  - src/angular_frontend/node_modules
-addons:
-  ssh_known_hosts:
-  - 146.185.181.250
-  - fg@fgbeta.samfundet.no
-jobs:
-  include:
-  - stage: test django
-    env:
-    - DOCKER_COMPOSE_VERSION=1.18.0
-    install:
-    - docker -v
-    - sudo rm /usr/local/bin/docker-compose
-    - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
-      -s`-`uname -m` > docker-compose
-    - chmod +x docker-compose
-    - sudo mv docker-compose /usr/local/bin
-    - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
-      down
-    - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
-      build
-    - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
-      up -d
-    - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
-      ps
-    script:
-    - sleep 5
-    - bash django-tests.sh
-  - stage: test angular
-    install:
-    - npm install -g @angular/cli@1.6.3
-    - cd src/angular_frontend && npm install
-    script:
-    - ng lint
-    - ng build --prod
+        directories:
+                - src/angular_frontend/node_modules
+        addons:
+                ssh_known_hosts:
+                        - 146.185.181.250
+                        - fg@fgbeta.samfundet.no
+                jobs:
+                        include:
+                                - stage: test django
+                                  env:
+                                          - DOCKER_COMPOSE_VERSION=1.18.0
+                                  install:
+                                          - docker -v
+                                          - sudo rm /usr/local/bin/docker-compose
+                                          - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+                                            -s`-`uname -m` > docker-compose
+                                          - chmod +x docker-compose
+                                          - sudo mv docker-compose /usr/local/bin
+                                          - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
+                                            down
+                                          - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
+                                            build
+                                          - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
+                                            up -d
+                                          - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
+                                            ps
+                                  script:
+                                          - sleep 5
+                                          - bash django-tests.sh
+                                          - stage: test angular
+                                            install:
+                                                    - npm install -g @angular/cli@1.6.3
+                                                    - cd src/angular_frontend && npm install
+                                            script:
+                                                    - ng lint
+                                                    - ng build --prod
 
-    stage: before-deploy
-            provider: script
-            script: zip dist.zip src/angular_frontend/dist
-    stage: Deploy
-            script: echo "Running realeases"
-            provider: releases
-            file: "dist.zip"
-            skip_cleanup: true
-            on:
-              tags: true
-notifications:
-  slack:
-    secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
+                                            stage: before-deploy
+                                            provider: script
+                                            script: zip dist.zip src/angular_frontend/dist
+                                            stage: Deploy
+                                            script: echo "Running realeases"
+                                            provider: releases
+                                            file: "dist.zip"
+                                            skip_cleanup: true
+                                            on:
+                                                    tags: true
+                                                    notifications:
+                                                            slack:
+                                                                    secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
 
