@@ -47,7 +47,7 @@ Deploy:
   script: echo "Running realeases"
   script: ls
   provider: releases
-  file: "app.zip"
+  file: "src/angular_frontend/app.zip"
   skip_cleanup: true
   on:
     tags: true
