@@ -49,8 +49,6 @@ deploy:
   provider: releases
   file: "app.zip"
   skip_cleanup: true
-  on:
-    tags: true
 
 notifications:
   slack:
