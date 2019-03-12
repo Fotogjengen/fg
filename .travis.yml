@@ -53,8 +53,6 @@ deploy:
   provider: releases
   file: "src/angular_frontend/app.zip"
   skip_cleanup: true
-  on:
-    tags: true
 
 notifications:
   slack:
