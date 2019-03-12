@@ -41,13 +41,9 @@ jobs:
     script:
     - ng lint
     - ng build --prod
-  - stage: before-deploy
-      provider: script
-      script:
-        - zip dist.zip src/angular_frontend/dist
-
-  - stage: Deploy
-      script: echo "Running realeases"
+    before_deploy:
+    - zip dist.zip src/angular_frontend/dist
+    deploy:
       provider: releases
       file: "dist.zip"
       skip_cleanup: true
