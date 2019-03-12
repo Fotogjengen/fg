@@ -54,7 +54,7 @@ deploy:
   file: "src/angular_frontend/app.zip"
   skip_cleanup: true
   on:
-    branch: automatic_release_master
+    all_branches: true
     tags: false
 
 notifications:
