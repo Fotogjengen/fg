@@ -41,11 +41,10 @@ jobs:
     script:
     - ng lint
     - ng build --prod
+
     stage: before-deploy
-                provider: script
-                script:
-                        - zip dist.zip src/angular_frontend/dist
-        
+            provider: script
+            script: zip dist.zip src/angular_frontend/dist
     stage: Deploy
             script: echo "Running realeases"
             provider: releases
