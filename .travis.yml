@@ -7,6 +7,8 @@ services:
 cache:
   directories:
   - src/angular_frontend/node_modules
+install:
+- npm install -g yarn
 addons:
   ssh_known_hosts:
   - 146.185.181.250
@@ -42,6 +44,10 @@ jobs:
     - ng lint
     - ng build --prod
     - zip -r app.zip dist/
+script:
+  #- yarn lint
+  - yarn build --base-href /fg/
+  #- mv dist/fg/index.html dist/fg/404.html
 before_deploy:
 - git config --local user.name "pernilak"
 - git config --local user.email "peklevstuen@gmail.com"
@@ -49,10 +55,11 @@ before_deploy:
 - git tag $TRAVIS_TAG
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: WdqLe1PMUiDME6LTqk49R7spAQQPlrJI1Ic4eSn/EcEe8/Qn6I11WWWG84oyarxqmhWhPyYkTYV+HzP4pApw/MRNC47mitcjihijoSkvM22kVp3UQI6TS6reO0CI7VxGJGGHTO2ItJplvHqiqLUNf7sYX05X270c/bxmHDL/3pIF8iRIPyBxbky5ABVdVp54nUOsY/6n6FqLfdI73uHV1IdVhOEPWPb1Jo/wycmQG1917oiysmHBQWAH9x6wbAlpYNBdmhA4RUcxs2u+WRV8E9VaxOMM5W04sTCVJ5MiRGEb39DQtF64sOcu8sFCY5CkBNxXCwERsrtb2SNaq6GgtqCe+x/RjRQfTAR9eg4pHyFG3lnY7FTmdbkPZ0x1gWBTPZvr2G9rYGjY8fnavLP9pP+WmVjX77n2djr0oYHEyX/K83lLSryKT10E3QPfsPL/l3eu83mXd+DEJa6m8YN0qi7bARNVGxjvM1J/CJoTfTGRk/4C+iTrrjSc9ExCNhBpRSgk5e8TNOJJl/bW1+VZR8ihVEZS+DepFcCoAu+I93Kga2STSF/Y/+AgT/F0PY6wIR7IjIkg5o0+j3xXWtX76bcYkPI/7N5YmJ4jqM8HvTF6x8xMFKFbDc4m4PKXkzhnpsfjxEAmsTEsSc8D+sqDzRMl9e2bg6opt+o9zXyL3xk=
-  file: src/angular_frontend/app.zip
-  skip_cleanup: true
+  #file: src/angular_frontend/app.zip
+  local_dir: dist/fg
   on:
     repo: Fotogjengen/fg
     branch: automatic_release_master
