@@ -51,6 +51,7 @@ deploy:
   script: echo "Running realeases"
   script: ls
   provider: releases
+  api_key: "5e3fd8646e718e185524a04258638af25b3c4d3d"
   file: "src/angular_frontend/app.zip"
   skip_cleanup: true
   on:
