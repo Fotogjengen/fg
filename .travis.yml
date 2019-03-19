@@ -33,7 +33,9 @@ jobs:
       up -d
     - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
       ps
-    - cd src/angular_frontend && yarn build --base-href /fg/
+    - cd src/angular_frontend
+    - npm install -g @angular/cli@1.6.3
+    - yarn build --base-href /fg/
     script:
     - sleep 5
     - bash django-tests.sh
