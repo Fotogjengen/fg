@@ -1,9 +1,9 @@
 sudo: required
 language: node_js
 node_js:
-        - '8'
+- '8'
 services:
-        - docker
+- docker
 cache:
   directories:
   - src/angular_frontend/node_modules
@@ -43,21 +43,18 @@ jobs:
     - ng build --prod
     - zip -r app.zip dist/
 before_deploy:
-  - git config --local user.name "pernilak"
-  - git config --local user.email "peklevstuen@gmail.com"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-  - git tag $TRAVIS_TAG
+- git config --local user.name "pernilak"
+- git config --local user.email "peklevstuen@gmail.com"
+- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+- git tag $TRAVIS_TAG
 deploy:
-  script: echo "Running realeases"
-  script: ls
   provider: releases
-  file: "src/angular_frontend/app.zip"
-  skip_cleanup: true
+  api_key:
+    secure: WdqLe1PMUiDME6LTqk49R7spAQQPlrJI1Ic4eSn/EcEe8/Qn6I11WWWG84oyarxqmhWhPyYkTYV+HzP4pApw/MRNC47mitcjihijoSkvM22kVp3UQI6TS6reO0CI7VxGJGGHTO2ItJplvHqiqLUNf7sYX05X270c/bxmHDL/3pIF8iRIPyBxbky5ABVdVp54nUOsY/6n6FqLfdI73uHV1IdVhOEPWPb1Jo/wycmQG1917oiysmHBQWAH9x6wbAlpYNBdmhA4RUcxs2u+WRV8E9VaxOMM5W04sTCVJ5MiRGEb39DQtF64sOcu8sFCY5CkBNxXCwERsrtb2SNaq6GgtqCe+x/RjRQfTAR9eg4pHyFG3lnY7FTmdbkPZ0x1gWBTPZvr2G9rYGjY8fnavLP9pP+WmVjX77n2djr0oYHEyX/K83lLSryKT10E3QPfsPL/l3eu83mXd+DEJa6m8YN0qi7bARNVGxjvM1J/CJoTfTGRk/4C+iTrrjSc9ExCNhBpRSgk5e8TNOJJl/bW1+VZR8ihVEZS+DepFcCoAu+I93Kga2STSF/Y/+AgT/F0PY6wIR7IjIkg5o0+j3xXWtX76bcYkPI/7N5YmJ4jqM8HvTF6x8xMFKFbDc4m4PKXkzhnpsfjxEAmsTEsSc8D+sqDzRMl9e2bg6opt+o9zXyL3xk=
+  file: src/angular_frontend/app.zip
   on:
-    all_branches: true
-    tags: false
-
+    repo: Fotogjengen/fg
+    branch: automatic_release_master
 notifications:
   slack:
   secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
-
