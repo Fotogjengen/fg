@@ -35,7 +35,7 @@ jobs:
       ps
     - cd src/angular_frontend
     - npm install -g @angular/cli@1.6.3
-    - yarn build --base-href /fg/
+    - ng build --base-href /fg/
     script:
     - sleep 5
     - bash django-tests.sh
