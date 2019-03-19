@@ -36,6 +36,7 @@ jobs:
     - npm install -g @angular/cli@1.6.3
     - cd src/angular_frontend && npm install
     - ng build --prod
+    - cd ../..
     script:
     - sleep 5
     - bash django-tests.sh
