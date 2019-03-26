@@ -7,22 +7,15 @@ services:
 cache:
   directories:
   - src/angular_frontend/node_modules
-<<<<<<< HEAD
 install:
 - npm install -g yarn
-=======
->>>>>>> development
 addons:
   ssh_known_hosts:
   - 146.185.181.250
   - fg@fgbeta.samfundet.no
 jobs:
   include:
-<<<<<<< HEAD
   - stage: test
-=======
-  - stage: test django
->>>>>>> development
     env:
     - DOCKER_COMPOSE_VERSION=1.18.0
     install:
@@ -40,7 +33,6 @@ jobs:
       up -d
     - docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.travis.yml
       ps
-<<<<<<< HEAD
     - npm install -g @angular/cli@1.6.3
     - cd src/angular_frontend && npm install
     - ng build --prod
@@ -62,24 +54,9 @@ deploy:
   file: src/angular_frontend/app.zip
   on:
     repo: Fotogjengen/fg
-    branch: automatic_release_master
+    branch: master
 notifications:
   slack:
   secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
 
 
-=======
-    script:
-    - sleep 5
-    - bash django-tests.sh
-  - stage: test angular
-    install:
-    - npm install -g @angular/cli@1.6.3
-    - cd src/angular_frontend && npm install
-    script:
-    - ng lint
-    - ng build --prod
-notifications:
-  slack:
-    secure: YlcczsJzqvtxcLnrELRX1RLbMjKkxYrhf4y7yBPqwzXaWzzmUML8K1RWqCA94tD66IRCK5GOZoE4qZb7RMDt7o1fN9Qn19wbbEbJkGmookFF8eindslBxyxKW9195Mxk0ZGpEuItfwoE3Le3KPg/kXAODoQPnYoHMi89tCOnzqzryKhmyhq+6qJ8tnIIEuNoQ3kHwoudWmRHAVB3CC9vJW3RRrTSCtis+t9lcgqmt2mouAFCXEwjFxzD+KwUOPqqdjMeZZh4V8g7Z4piS5WpyLqvNmJrKelURxI3sW/CBUFp0WLpjvdOsaYsIYntlsqbCAe/NoTFO0MDK4lMfJRv/XB66+Ou8WltJQC6ygj4ulrDeJTBAxMmy28zojvoZp7BBKpYjQNiZ3G9rL6FkOuJhM+C9jbzrony+DDNcOJvkJogs4X6rJyPO2ekNWQWoEagwOkCn0LGO1b7LkEi15DgeHPae9nKtldCi0jsWdcb3Y6yP7Ot0HTyT5z4mPb8jEThHHjuMnFVeaobwLiNcamK00Y0AuQXgolvEWOyIfjGP1qPKI7W9oJrtQ/EyumGvINGLs4OMjAVX4uCxmg+9iOvDXkP5h2AmKc0sjbND7uznvktVKay88oOiFUW/XXXEOYkUw6HfxNzVkZKlqzf+6HxamIi5QgZdS5UqXZvmSmeLv8=
->>>>>>> development
