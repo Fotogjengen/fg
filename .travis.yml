@@ -39,7 +39,7 @@ jobs:
     - cd ../..
     script:
     - sleep 5
-    - bash django-tests.sh
+    #- bash django-tests.sh
   - stage: test angular
     install:
     - npm install -g @angular/cli@1.6.3
