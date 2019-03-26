@@ -46,7 +46,7 @@ jobs:
     - cd src/angular_frontend && npm install
     script:
     - ng lint
-    - ng build  --env=prod
+    - ng build  --prod
     - zip -r app.zip dist/
 script:
   #- yarn lint
