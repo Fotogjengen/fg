@@ -9,4 +9,3 @@ docutils==0.14
 Markdown==2.6.11
 psycopg2==2.7.5
 python-dateutil==2.6.1
-uWSGI==2.0.17
