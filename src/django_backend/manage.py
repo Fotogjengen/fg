@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
-
+import os
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.settings")
+    if (os.path.isfile("fg/local_settings.py")):
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.local_settings") # setter prod settings
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

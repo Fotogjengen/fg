@@ -1,7 +1,9 @@
 <div *ngIf="shown" class="modal fixed" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
-  <form [@shake]="wrongPassword" (ngSubmit)="login()" (clickOutside)="shown = false" [exclude]="'.login'" [formGroup]="loginForm" class="form" fxLayout="column" fxLayoutAlign="stretch center"
+  <!-- TODO: This will be used with poweruserlogin
+  <form [@shake]="wrongPassword" (ngSubmit)="loginPower()" (clickOutside)="shown = false" [exclude]="'.login'" [formGroup]="loginForm" class="form" fxLayout="column" fxLayoutAlign="stretch center"
     fxLayoutGap="20px">
     <button class="btn" type="button" (click)="shown = false">Lukk</button>
+
     <div class="input-group">
       <label>Brukernavn</label>
       <input type="text" formControlName="username">
@@ -11,12 +13,46 @@
       <label>Passord</label>
       <input type="password" formControlName="password">
     </div>
-
     <div fxLayout="row" fxLayoutGap="5px">
       <button type="submit" [disabled]="!loginForm.valid" class="btn btn-info">Logg inn</button>
     </div>
-
     <span *ngIf="wrongPassword">Feil brukernavn eller passord, prøv igjen</span>
   </form>
+  -->
+  <div class="form" fxLayout="column" fxLayoutAlign="stretch center"
+       fxLayoutGap="20px">
+    <div *ngIf="!loginPowerShown">
+      <button class="btn btn-info" type="button" (click)="loginHusfolk()">Logg inn husfolk</button>
+    </div>
+
+    <div>
+      <!--LoginPower button isn disabled because login for powerusers have not been implemented yet-->
+      <button *ngIf="!loginPowerShown" class="btn btn-info" type="button" (click)="loginPowerShown=true" disabled>Logg inn powerbruker</button>
+      <p>Powerbrukere kommer snart!</p>
+      <button *ngIf="loginPowerShown" (click)="loginPowerShown=false" class="btn">
+        <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+      </button>
+
+      <form *ngIf="loginPowerShown" [@shake]="wrongPassword" (ngSubmit)="loginPower()" [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="stretch center"
+            fxLayoutGap="20px">
+
+        <div class="input-group">
+          <label>Brukernavn</label>
+          <input type="text" formControlName="username">
+        </div>
+
+        <div class="input-group">
+          <label>Passord</label>
+          <input type="password" formControlName="password">
+        </div>
+        <div fxLayout="row" fxLayoutGap="5px">
+          <button type="submit" [disabled]="!loginForm.valid" class="btn btn-info">Logg inn</button>
+        </div>
+        <span *ngIf="wrongPassword">Feil brukernavn eller passord, prøv igjen</span>
+      </form>
+    </div>
+    <hr *ngIf="!loginPowerShown">
+    <button class="btn" type="button" (click)="shown = false">Lukk</button>
+  </div>
 
 </div>

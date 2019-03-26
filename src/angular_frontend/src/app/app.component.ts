@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { StoreService } from 'app/services/store.service';
+import {DownloadService} from './services/download.service';
 
 @Component({
   selector: 'fg-root',

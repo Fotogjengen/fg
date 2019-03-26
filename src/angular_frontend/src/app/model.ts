@@ -207,6 +207,12 @@ export enum ChangeEnum {
   Create
 }
 
+export enum PermissionEnum {
+  FG = 3,
+  HUSFOLK = 2,
+  ALLE = 1
+}
+
 export const testData: IResponse<IPhoto> = {
   count: 1,
   next: null,
@@ -282,6 +288,7 @@ export interface IToken {
 export interface ILoginResponse {
   username: string;
   groups: string[];
+  permission: number;
 }
 
 export interface ISnack {
