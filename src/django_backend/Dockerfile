@@ -2,6 +2,14 @@ FROM python:3.6.1
 
 MAINTAINER Jama Noor (jamawadi@gmail.com)
 
+# Fixed bug #83 failed to fetch binary package. TODO: Remove in the future
+
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie-backports.list
+# Fixed bug #83 failed to fetch binary package. TODO: Remove in the future
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+# Fixed bug #83 failed to fetch binary package. TODO: Remove in the future
+RUN apt-get -o Acquire::Check-Valid-Until=false update
+
 # Install swig
 RUN apt-get update && apt-get install -y --no-install-recommends swig
 RUN apt-get install -y --no-install-recommends libunbound-dev
