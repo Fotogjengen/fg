@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.settings")
+if (os.path.isfile("fg/local_settings.py")):
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.local_settings") # setter prod settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.local_settings")
 
 application = get_wsgi_application()
