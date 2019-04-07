@@ -1,4 +1,6 @@
 .idea
+*.swp
+*.zip
 .vscode
 temp
 *.log
