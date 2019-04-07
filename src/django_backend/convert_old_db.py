@@ -3,9 +3,11 @@ import time
 import sys
 import json
 import logging
+
 sys.path.append('/django')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fg.settings")
 import django
+
 django.setup()
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,7 +20,7 @@ from fg.fg_auth.models import User
 logging.basicConfig(level=logging.INFO)
 
 
-def convert_SecurityLevel():
+def convert_security_level():
     logging.info("Converting security_levels")
     old_security_levels = old_models.FgAuthSecuritylevel.objects.using(
         'old_db').all()
@@ -31,7 +33,7 @@ def convert_SecurityLevel():
     models.SecurityLevel.objects.bulk_create(obj_list)
 
 
-def convert_Tag():
+def convert_tag():
     logging.info("Converting tags")
     old_tags = old_models.ArchiveTag.objects.using('old_db').all()
 
@@ -43,7 +45,7 @@ def convert_Tag():
     models.Tag.objects.bulk_create(obj_list)
 
 
-def convert_Category():
+def convert_category():
     logging.info("Converting categories")
     old_categories = old_models.ArchiveCategory.objects.using('old_db').all()
 
@@ -55,7 +57,7 @@ def convert_Category():
     models.Category.objects.bulk_create(obj_list)
 
 
-def convert_Album():
+def convert_album():
     logging.info("Converting albums")
     old_albums = old_models.ArchiveAlbum.objects.using('old_db').all()
 
@@ -79,7 +81,7 @@ def convert_Album():
     models.Album.objects.bulk_create(obj_list)
 
 
-def convert_Media():
+def convert_media():
     logging.info("Converting mediums")
     old_mediums = old_models.ArchiveMedia.objects.using('old_db').all()
 
@@ -91,7 +93,7 @@ def convert_Media():
     models.Media.objects.bulk_create(obj_list)
 
 
-def convert_Place():
+def convert_place():
     logging.info("Converting places")
     old_places = old_models.ArchivePlace.objects.using('old_db').all()
 
@@ -124,7 +126,21 @@ def get_latest_image_number_and_page_number(album_pk):
     }
 
 
-def convert_Photo():
+def date_to_week(date):
+    # %V - The ISO 8601 week number of the current year (01 to 53),
+    # where week 1 is the first week that has at least 4 days in the current year,
+    # and with Monday as the first day of the week.
+    week = date.strftime("V")
+    month = date.month
+    if week == 52 or week == 53:
+        if month == 12:
+            return 52  # Week should be 52 if it is december
+        if month == 1:
+            return 1  # Week should be 1 if taken in january before transition to week 1
+    return week  # Else return week number we got earlier
+
+
+def convert_photo():
     logging.info("Converting Photos")
     old_photo_set = old_models.ArchiveImagemodel.objects.using('old_db').all()
 
@@ -158,6 +174,7 @@ def convert_Photo():
             page=item.page,
             image_number=item.image_number,
             date_taken=item.date,
+            week_taken=date_to_week(item.date),
 
             security_level_id=item.security_level.pk,
             category_id=item.category.pk,
@@ -196,7 +213,7 @@ def convert_Photo():
             logging.info(resp)
 
 
-def attach_Tags_to_photos():
+def attach_tags_to_photos():
     logging.info("attaching tags to photos")
     old_tag2photo_set = old_models.ArchiveImagemodelTag.objects.using(
         'old_db').order_by('imagemodel')[::1]
@@ -215,18 +232,18 @@ def attach_Tags_to_photos():
 
 
 def convert():
-    User.objects.create_superuser(
-        username='fg', email='', password='qwer1234')
+    # User.objects.create_superuser(
+    #     username='fg', email='', password='qwer1234')
 
-    convert_SecurityLevel()
-    convert_Tag()
-    convert_Category()
-    convert_Album()
-    convert_Media()
-    convert_Place()
-    convert_Photo()
+    convert_security_level()
+    convert_tag()
+    convert_category()
+    convert_album()
+    convert_media()
+    convert_place()
+    convert_photo()
 
-    attach_Tags_to_photos()
+    attach_tags_to_photos()
     # TODO move users and user_photo_downloaded in as well
 
 
