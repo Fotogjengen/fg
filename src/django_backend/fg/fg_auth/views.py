@@ -13,7 +13,7 @@ from django.utils.decorators import decorator_from_middleware
 from .middlewares import ProxyRemoteUserMiddleware
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.authtoken.models import Token
-import itkacl
+import _itkacl as itkacl
 
 from . import models, serializers
 from ..enums import Permission

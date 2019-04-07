@@ -1,6 +1,9 @@
 .idea
+*.swp
+*.zip
 .vscode
 temp
 *.log
 .DS_Store
 webhook/hooks.json
+local_settings.py
