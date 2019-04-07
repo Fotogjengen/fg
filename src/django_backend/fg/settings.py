@@ -55,11 +55,6 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
@@ -76,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'fg.fg_auth.middlewares.ProxyRemoteUserMiddleware',
 ]
 
 ROOT_URLCONF = 'fg.urls'
@@ -230,11 +226,10 @@ VERSATILEIMAGEFIELD_SETTINGS = {
 
 # AUTH SETTINGS
 AUTH_USER_MODEL = 'fg_auth.User'
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_URL = '/login'
+# LOGIN_REDIRECT_URL = '/'
 AUTHENTICATION_BACKENDS = (
-    'fg.fg_auth.auth.KerberosBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'fg.fg_auth.backends.AdRemoteUserBackend',
 )
 
 # Groups

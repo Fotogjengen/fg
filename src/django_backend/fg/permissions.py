@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+import _itkacl as itkacl
 
 
 class IsFGOrReadOnly(BasePermission):
@@ -10,14 +11,8 @@ class IsFGOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in SAFE_METHODS:
-            return True
-
-        return request.user and request.user.is_authenticated and (
-            request.user.groups.filter(name="FG").exists()
-            or
-            request.user.is_superuser
-        )
+        user = request.user
+        return itkacl.check('/web/fg', user.username)
 
 
 class IsFgOrPostOnly(BasePermission):
@@ -26,14 +21,8 @@ class IsFgOrPostOnly(BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.method == 'POST':
-            return True
-
-        return request.user and request.user.is_authenticated and (
-            request.user.groups.filter(name="FG").exists()
-            or
-            request.user.is_superuser
-        )
+        user = request.user
+        return itkacl.check('/web/fg', user.username)
 
 
 class IsFG(BasePermission):
@@ -41,11 +30,8 @@ class IsFG(BasePermission):
     message = "You must be in the FG group in order to see this item."
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated and (
-            request.user.groups.filter(name="FG").exists()
-            or
-            request.user.is_superuser
-        )
+        user = request.user
+        return itkacl.check('/web/fg', user.username)
 
 
 class IsFgOrHusfolk(BasePermission):
@@ -53,11 +39,8 @@ class IsFgOrHusfolk(BasePermission):
     message = "You must be in the FG or HUSFOLK group in order to see this item."
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated and (
-            request.user.groups.filter(
-                name__in=['FG', 'HUSFOLK', 'POWER']).exists()
-            or request.user.is_superuser
-        )
+        user = request.user
+        return itkacl.check('/web/fg', user.username)
 
 
 class IsFgOrHusfolkPostOnly(BasePermission):
@@ -65,8 +48,5 @@ class IsFgOrHusfolkPostOnly(BasePermission):
     message = "You must be in the FG or HUSFOLK group in order to Post, only FG can get"
 
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated
-                and (
-                    (request.user.groups.filter(name__in=[
-                     'HUSFOLK', 'POWER']).exists() and request.method == 'POST')
-                    or request.user.groups.filter(name='FG').exists()))
+        user = request.user
+        return itkacl.check('/web/fg', user.username)

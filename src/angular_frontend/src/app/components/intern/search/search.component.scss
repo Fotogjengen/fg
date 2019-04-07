@@ -1,51 +1,85 @@
 @import '../../../../styles/_colors.scss';
+@import '../../../../styles/_mixins.scss';
 
-.search-table-container {
-  overflow-x: scroll;
-}
-
-.search-table {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: smaller;
-  border-bottom: 2px solid $outline;
-
-  &--head {
-    &--row > td + td {
-      border-left: 2px solid $outline;
-    }
-  }
-
-  &--body {
-    &--row > td + td {
-      border-left: none;
-    }
-
-    &--row > td {
-      width: 10%;
-    }
-
-    font-size: smaller;
-  }
-
+.card {
+  padding: 1rem 0;
+  border-bottom: #374c5f solid;
   &--img {
-    object-fit: contain;
-    width: 100px;
+    object-fit: none;
+    width: 150px;
+    height: 150px;
+    background: no-repeat center center;
   }
-
-  &--link {
-    text-decoration: underline;
+  &--checkbox {
+    width: 32px;
+    height: 32px;
+    order: 1;
+    z-index: 2;
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
   }
-  &--link:link {
-    color: #58C5FF;
+  &--btns {
+    width: 100%;
   }
-  &--link:visited {
-    color: #58C5FF;
-  }
-  &--link:hover {
-    color: #A29DFF;
+  &--handlers {
+    &--multiedit {
+      width: fit-content;
+      white-space: nowrap;
+      @include checkbox();
+    }
   }
 }
 
-table td {
-  padding: 0.01rem 0.5rem;
+.mobile {
+  width: inherit;
+  padding: 1rem 0;
+  border-bottom: #374c5f solid;
+  &--image {
+    width: 100%;
+    object-fit: contain;
+  }
+  &--metadata {
+    padding: 1rem 0;
+    & p {
+      margin: 0;
+    }
+  }
+  &--buttons {
+    &--multiedit {
+      @include checkbox();
+    }
+  }
+}
+
+// Adds each of these styles in % of time spendt in animation
+@keyframes icon {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
+// Adds each of these styles in % of time spendt in animation
+@keyframes check {
+  0% {
+    opacity: 0.1;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  25% {
+    opacity: 0.4;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    background: $success-light;
+    opacity: 0.6;
+  }
+  100% {
+    background: $success-light;
+    opacity: 1;
+  }
 }

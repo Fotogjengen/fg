@@ -10,6 +10,8 @@ services:
     environment:
       - DEVELOPMENT=true
       - POSTGRES_DB=fg_dev_db
+      - LD_LIBRARY_PATH=/usr/local/lib
+      - HTTP_REMOTE_USER=sjsivert@ad.samfundet.no
     volumes:
       - ./src/angular_frontend:/static/angular
 

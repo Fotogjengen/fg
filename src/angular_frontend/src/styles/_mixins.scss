@@ -13,3 +13,48 @@
         }
     }
 }
+
+// Checkbox
+@mixin checkbox() {
+  &--label {
+    &--checkbox {
+      display: none;
+    }
+    &--checkbox:checked + &--text &--check {
+      animation: .2s forwards check;
+      .icon {
+        opacity: 1;
+        transform: scale(0);
+        color: white;
+        animation: icon .3s cubic-bezier(1.000, 0.008, 0.565, 1.650) .1s 1 forwards;
+      }
+    }
+    &--check {
+      border-radius: 50%;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      background: white;
+      width: 2em;
+      height: 2em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border .3s ease;
+      float: right;
+      margin-top: 0.5rem;
+      margin-right: 50%;
+
+      i.icon {
+        opacity: 0.2;
+        font-size: 1.1rem;
+        color: transparent;
+        transition: opacity .3s .1s ease;
+        -webkit-text-stroke: 3px rgba(0, 0, 0, .5);
+      }
+
+      &:hover {
+        border: 5px solid rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}

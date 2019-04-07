@@ -24,7 +24,7 @@
         <i class="fa fa-th"></i>
       </a>
 
-
+<!-- TODO: When we decide to do shopping cart
       <button *ngIf="store.getUsernameAction()"
         matTooltip="Klikk for å legge til handlevogn"
         matTooltipPosition="above"
@@ -34,7 +34,19 @@
         (click)="[photo.addedToCart ? removeFromShoppingCart(photo) : addToShoppingCart(photo)]"
         >
         <i class="fa fa-shopping-cart"></i>
-      </button>
+      </button>-->
+
+      <!--Download button-->
+      <a *ngIf="store.getUsernameAction()"
+              download
+              [href]="download.createDownloadlink(photo.photo.prod)"
+              matTooltip="Klikk for å laste ned"
+              matTooltipPosition="above"
+              matTooltipClass="matTooltip"
+              class="btn btn-transparent no-focus"
+      >
+        <i class="fa fa-download"></i>
+      </a>
     </div>
 
     <img

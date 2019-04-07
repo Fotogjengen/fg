@@ -4,8 +4,10 @@
     <div fxLayout="column">
       <label>Album</label>
       <select formControlName="album">
-      <option ng-style="{'background-color': 'red'}" [ngValue]="album.id" *ngFor="let album of albums">{{album.name}}</option>
-    </select>
+        <option ng-style="{'background-color': 'red'}" [ngValue]="album.id" *ngFor="let album of albums">
+          {{album.name}}
+        </option>
+      </select>
     </div>
     <div fxLayout="column">
       <label>Side</label>
@@ -27,8 +29,9 @@
     <div fxLayout="column">
       <label>Dato</label>
       <div fxLayout="row" fxLayoutAlign="stretch">
-        <input fxFlex="100" (click)="dp.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker [options]="options" #dp="ngx-mydatepicker"
-          formControlName="date_taken">
+        <input fxFlex="100" (click)="dp.toggleCalendar()" class="datepicker clickable right-edge" ngx-mydatepicker
+               [options]="options" #dp="ngx-mydatepicker"
+               formControlName="date_taken">
         <button type="button" class="btn btn-info" (click)="dp.toggleCalendar()">
           <i class="fa fa-calendar"></i>
         </button>
@@ -37,46 +40,31 @@
     <div fxLayout="column">
       <label>Media</label>
       <select formControlName="media">
-      <option [ngValue]="media.id" *ngFor="let media of mediums">{{media.name}}</option>
-    </select>
+        <option [ngValue]="media.id" *ngFor="let media of mediums">{{media.name}}</option>
+      </select>
     </div>
     <div fxLayout="column">
       <label>Kategori</label>
       <select formControlName="category">
-      <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
-    </select>
+        <option [ngValue]="category.id" *ngFor="let category of categories">{{category.name}}</option>
+      </select>
     </div>
     <div fxLayout="column">
       <label>Sted</label>
       <select formControlName="place">
-      <option [ngValue]="place.id" *ngFor="let place of places">{{place.name}}</option>
-    </select>
+        <option [ngValue]="place.id" *ngFor="let place of places">{{place.name}}</option>
+      </select>
     </div>
     <div fxLayout="column">
       <label>Sikkerhetsnivå</label>
       <select formControlName="security_level">
-      <option [ngValue]="securityLevel.id" *ngFor="let securityLevel of securityLevels">{{securityLevel.name}}</option>
-    </select>
-    </div>
-
-    <div fxLayout="column">
-      <label for="lapel">Oppslagsbilde</label>
-      <input id="lapel" type="checkbox" formControlName="lapel">
-    </div>
-    <div fxLayout="column">
-      <label for="on_home_page">Vises på forsiden</label>
-      <input id="on_home_page" type="checkbox" formControlName="on_home_page">
-    </div>
-    <div fxLayout="column">
-      <div fxLayout="row">
-        <label for="splash">Sett som bannerbilde</label>
-        <div class="chip"><i class="fa fa-certificate"></i> Ny!</div>
-      </div>
-      <input id="splash" type="checkbox" formControlName="splash">
+        <option [ngValue]="securityLevel.id" *ngFor="let securityLevel of securityLevels">{{securityLevel.name}}
+        </option>
+      </select>
     </div>
 
     <button class="btn btn-primary" type="button" (click)="uploadAll()" [disabled]="!uploadForm.valid">
-        <i class="fa fa-upload"></i> Start alle
+      <i class="fa fa-upload"></i> Start alle
     </button>
 
     <p>{{uploadForm.value | json}}</p>
@@ -85,13 +73,16 @@
 
   <!-- Preview box -->
   <div fxFlex="<grow>" fxLayout="column" fxLayoutGap="20px">
-    <div class="hover-zone" #ngfUploader ngfDrop selectable="1" multiple="1" [uploader]="uploader" [(validDrag)]="validComboDrag"
-      [(invalidDrag)]="invalidComboDrag" [ngClass]="{'hover-safe-zone': validComboDrag, 'hover-danger-zone': invalidComboDrag}"
-      accept="image/*">
+    <div class="hover-zone" #ngfUploader ngfDrop selectable="1" multiple="1" [uploader]="uploader"
+         [(validDrag)]="validComboDrag"
+         [(invalidDrag)]="invalidComboDrag"
+         [ngClass]="{'hover-safe-zone': validComboDrag, 'hover-danger-zone': invalidComboDrag}"
+         accept="image/*">
       <i class="fa fa-plus fa-lg"></i> Klikk her eller dra bilder til dette feltet
     </div>
 
-    <div *ngFor="let item of uploader.queue" class="preview" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px">
+    <div *ngFor="let item of uploader.queue; let i=index" class="preview" fxLayout="row" fxLayoutAlign="space-between"
+         fxLayoutGap="10px">
       <div *ngIf="['image/png','image/jpeg'].indexOf(item._file.type)>=0">
         <div class="preview--icon" [ngfBackground]="item._file"></div>
       </div>
@@ -100,16 +91,28 @@
         <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px">
           <span>{{item?.file?.name }}</span>
           <span>{{item._file?.size | megabytes}}</span>
-          <button type="button" [disabled]="item.isUploading || item.isSuccess || !uploadForm.valid" class="btn btn-primary" (click)="uploadItem(item)">
+          <button type="button" [disabled]="item.isUploading || item.isSuccess || !uploadForm.valid"
+                  class="btn btn-primary" (click)="uploadItem(item)">
             <i class="fa fa-upload"></i> Start
           </button>
 
           <div fxLayout="column">
             <div fxLayout="row">
-              <label for="splash">Sett som bannerbilde</label>
-              <div class="chip"><i class="fa fa-certificate"></i> Ny!</div>
+              <label [for]="i + 'splash'">Bannerbilde</label>
             </div>
-            <input id="item.index" type="checkbox" (click)="makeSplash(item.index)">
+            <input [id]="i + 'splash'" type="checkbox" (click)="makeSplash(i)">
+          </div>
+          <div fxLayout="column">
+            <div fxLayout="row">
+              <label [for]="i + 'lapel'">Oppslagsbilde</label>
+            </div>
+            <input [id]="i + 'lapel'" type="checkbox" (click)="makeLapel(i)">
+          </div>
+          <div fxLayout="column">
+            <div fxLayout="row">
+              <label [for]="i + 'front'">Forsidebilde</label>
+            </div>
+            <input [id]="i + 'front'" type="checkbox" (click)="makeFrontPage(i)">
           </div>
 
           <button type="button" class="btn btn-danger" (click)="removeItem(item)" [disabled]="!uploadForm.valid">

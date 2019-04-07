@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, HostListener} from '@angular/core';
 import {FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {IForeignKey, IResponse, IPhoto, IFilters} from 'app/model';
 import {DATE_OPTIONS} from 'app/config';
@@ -33,6 +33,7 @@ export class SearchComponent implements OnInit {
   filteredMotives: string[] = [];
   searching = false;
   photosAreLoaded = false;
+  screenWidth: any;
 
   oldParams = {};
 
@@ -81,10 +82,18 @@ export class SearchComponent implements OnInit {
       this.filteredMotives = this.motives.filter(motive => motive.toLowerCase().indexOf(m) !== -1);
     });
     // If we are routed back from "edit" then we will automatically search for the same as we had before we edited
-    if (this.store.lastSearchedString.length > 0) {
+    if (this.store.lastSearchedString !== undefined && this.store.lastSearchedString.length > 0) {
       this.initialize(JSON.parse(this.store.lastSearchedString));
       this.store.lastSearchedString = '';
     }
+    // Sets screenwidth
+    this.screenWidth = window.innerWidth;
+  }
+
+  // Sets new screenwidth on resize
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth = window.innerWidth;
   }
 
   initialize(filter: any) {
@@ -170,15 +179,15 @@ export class SearchComponent implements OnInit {
 
   async editSingle(photoID: number) {
     this.store.lastSearchedString = this.lastSearchString;
-    console.log('hei');
     await this.router.navigate(['../rediger'], {
       relativeTo: this.route,
       queryParams: {id: photoID},
     });
+    console.log(photoID);
   }
 
-  check(checked, photo: IPhoto) {
-    photo.checkedForEdit = checked;
+  check(photo: IPhoto) {
+    photo.checkedForEdit = !photo.checkedForEdit;
   }
 
   onPhotoClick(i: number) {

@@ -9,8 +9,14 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.forms.models import model_to_dict
+from django.utils.decorators import decorator_from_middleware
+from .middlewares import ProxyRemoteUserMiddleware
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.authtoken.models import Token
+import _itkacl as itkacl
 
 from . import models, serializers
+from ..enums import Permission
 from ..paginations import UnlimitedPagination
 from ..permissions import IsFGOrReadOnly, IsFG
 
@@ -54,25 +60,14 @@ class PowerUsersView(ListAPIView):
         return models.User.objects.filter(groups__name="POWER").all()
 
 
+# @decorator_from_middleware(ProxyRemoteUserMiddleware)
 def login_user(request):
-    print(request.META)
-    auth_header = request.META['HTTP_AUTHORIZATION']
-    encoded_credentials = auth_header.split(' ')[1]
-    decoded_credentials = base64.b64decode(
-        encoded_credentials).decode("utf-8").split(':')
-    username = decoded_credentials[0]
-    password = decoded_credentials[1]
-    user = authenticate(username=username, password=password)
-
-    if user:
-        if user.is_active:
-            login(request, user)
-            groups = []
-            for g in user.groups.all():
-                groups.append(g.name)
-            return JsonResponse({"username": user.username, "groups": groups})
-        else:
-            return JsonResponse({"error": "User is inactive"}, status=403)
+    # Find which security level you should have:
+    if itkacl.check('/web/fg', request.user.username):
+        permission = Permission.FG
+    elif itkacl.check('/web/alle', request.user.username):
+        permission = Permission.HUSFOLK
     else:
-        sleep(1)
-        return JsonResponse({"error": "User with username/password not found"}, status=403)
+        permission = Permission.ALLE
+
+    return JsonResponse({"username": request.user.username, "permission": permission})
