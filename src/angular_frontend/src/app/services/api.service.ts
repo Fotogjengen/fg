@@ -60,6 +60,7 @@ export class ApiService {
   }
 
   getSplashPhoto(): Observable<IPhoto> {
+    console.log(document.cookie);
     return this.http.get<IPhoto>(`api/photos/latest-splash`);
   }
 

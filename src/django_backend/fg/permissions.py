@@ -1,7 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 import _itkacl as itkacl
 
-
 class IsFGOrReadOnly(BasePermission):
     """
     Object-level permission to only allow read-only operations.
@@ -12,7 +11,8 @@ class IsFGOrReadOnly(BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         user = request.user
-        return itkacl.check('/web/fg', user.username)
+        # return itkacl.check('/web/fg', user.username)
+        return True
 
 
 class IsFgOrPostOnly(BasePermission):
