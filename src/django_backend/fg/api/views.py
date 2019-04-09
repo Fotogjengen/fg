@@ -18,6 +18,8 @@ from rest_framework.permissions import AllowAny
 from . import models, serializers, filters
 from PIL import Image
 
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 Statistics = namedtuple(
     'Statistics',
     ('photos', 'tags', 'scanned', 'albums', 'splash',

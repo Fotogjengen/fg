@@ -1,7 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 import _itkacl as itkacl
 
-
 class IsFGOrReadOnly(BasePermission):
     """
     Object-level permission to only allow read-only operations.

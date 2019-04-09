@@ -261,7 +261,7 @@ export class StoreService {
       },
       e => this.toastr.error(
         `Kunne ikke Opprette ${fk.name}`,
-        `Errortype: ${e.error.split(' ')[0]}`
+        `Errortype: ${e.error/*.split(' ')[0]*/}`
       )
     );
   }
