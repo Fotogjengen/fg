@@ -11,8 +11,7 @@ class IsFGOrReadOnly(BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         user = request.user
-        # return itkacl.check('/web/fg', user.username)
-        return True
+        return itkacl.check('/web/fg', user.username)
 
 
 class IsFgOrPostOnly(BasePermission):
